@@ -13,6 +13,7 @@
         "cordova-android": "^6.3.0",
         "cordova-browser": "^4.1.0",
         "cordova-ios": "^4.4.0",
+        "crypto-js": "3.1.9-1",
         "ios-sim": "^6.1.2"
     },
     "devDependencies": {

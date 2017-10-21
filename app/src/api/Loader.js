@@ -1,31 +1,29 @@
-import {get} from '../utils/Req'
-import Routes from '../const/apiRoutes'
+/**
+ * @type {BrowerDataBaseClass|*}
+ */
 
-const fullData = () => new Promise((ok, bad) => get(Routes.appInit)
-	.then(
-		r => ok({
-			"categories":{
-				"2":"All Categories",
-				"3":"Unknown"
-			},
-			"settings":{
-				"dbox":{
-					"isHaveConfig":false
-				},
-				"google":{
-					"isHaveConfig":false
-				}
-			},
-			"storage":[],
-			"users":[
-				{
-					"_id":2,
-					"login":"test",
-					"pass":"52c453a352e11c94ea95f4a6ac4c1354bd762f6e57dbcd54012f50684be17694"
-				}
-			]
-		})
-		, bad
-	));
+const fullData = async () => {
+
+	const db = window.cordova.db;
+
+	const users = await db.getAll('users');
+
+	const categories = await db.getAll('categories');
+	let dataCat = {};
+	categories.map(cat => dataCat[cat.id] = cat.name);
+
+	const storage = await db.getAll('storage');
+
+	const settings = await db.getAll('settings');
+	let dataSett = {};
+	settings.map(sett => dataSett[sett.type] = JSON.parse(sett.data));
+
+	return {
+		categories : dataCat,
+		settings : dataSett,
+		storage : storage,
+		users : users
+	}
+};
 
 export {fullData};

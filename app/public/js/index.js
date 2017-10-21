@@ -20,6 +20,10 @@ var app = {
 	// Application Constructor
 	initialize: function () {
 		document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
+
+		if (!window.cordova) {
+			this.receivedEvent('deviceready');
+		}
 	},
 
 	// deviceready Event Handler
@@ -28,34 +32,68 @@ var app = {
 	// 'pause', 'resume', etc.
 	onDeviceReady: function () {
 		this.receivedEvent('deviceready');
-
 	},
 
 	// Update DOM on a Received Event
 	receivedEvent: function (id) {
 		var that = this;
-		that._db = new window.BrowerDataBaseClass({name : 'pass_store'});
-		that._db.init()
 
-			.catch(function (err) {
-				console.log('Error :', err);
-			});
-		that.runReact();
+		that._db = new window.BrowerDataBaseClass({name: 'pass_store'});
+
+		if (!window.cordova) {
+			window.cordova = {};
+		}
+
+		window.cordova.db = that._db;
+
+		that._db.init(that._db_struct())
+			.then(function () {
+				return that._db.getAll('users');
+			})
+			.then(function (users) {
+
+				if (users.length) {
+					return that.runReact();
+				}
+
+				return that._db.insert('users', ['_id', 'login', 'pass'], [1, 'test', '52c453a352e11c94ea95f4a6ac4c1354bd762f6e57dbcd54012f50684be17694'])
+					.then(function () {
+						return that._db.insert('categories', ['id', 'name'], [
+							[2, 'All Categories'],
+							[3, 'Unknown']
+						])
+					})
+					.then(function () {
+						return that._db.insert(
+							'settings',
+							['id', 'type', 'data'],
+							[1, 'google', JSON.stringify({config : '', isHaveConfig : false})]
+						);
+					})
+					.then(function () {
+						that.runReact();
+					})
+					.catch(that._catch);
+			})
+			.catch(that._catch);
 	},
-	_db_struct : function () {
+	_catch : function (err) {
+		console.log('Error :', err);
+	},
+	_db_struct: function () {
 		var that = this;
 		var constant = that._db.queryConst();
 
 		return {
-			users : {
-				id: {
+			users: {
+				_id: {
 					type: constant.TYPE_INT,
-						pk: {
+					pk: {
 						order: constant.ASC
 					}
 				},
 				login: {
-					type: constant.TYPE_CHAR+ '(20)' ,
+					type: constant.TYPE_CHAR + '(20)',
 					require: true,
 					unique: true
 				},
@@ -63,21 +101,21 @@ var app = {
 					type: constant.TYPE_CHAR
 				}
 			},
-			settings : {
+			settings: {
 				id: {
 					type: constant.TYPE_INT,
 					pk: {
 						order: constant.ASC
 					}
 				},
-				type : {
-					type: constant.TYPE_CHAR+ '(20)' ,
+				type: {
+					type: constant.TYPE_CHAR + '(20)',
 					require: true,
 					unique: true
 				},
-				data : { type: constant.TYPE_TEXT }
+				data: {type: constant.TYPE_TEXT}
 			},
-			categories : {
+			categories: {
 				id: {
 					type: constant.TYPE_INT,
 					pk: {
@@ -85,41 +123,41 @@ var app = {
 					}
 				},
 				name: {
-					type: constant.TYPE_CHAR+ '(100)' ,
+					type: constant.TYPE_CHAR + '(100)',
 					require: true,
 					unique: true
 				},
 			},
-			storage : {
+			storage: {
 				id: {
 					type: constant.TYPE_INT,
 					pk: {
 						order: constant.ASC
 					}
 				},
-				category : {
+				category: {
 					id: {
 						type: constant.TYPE_INT,
 						require: true
 					},
 				},
-				title : {
+				title: {
 					type: constant.TYPE_CHAR,
 					require: true
 				},
-				login : {
+				login: {
 					type: constant.TYPE_CHAR,
 					require: true
 				},
-				pass  : {
+				pass: {
 					type: constant.TYPE_CHAR
 				},
-				answer : { type: constant.TYPE_CHAR },
-				desc : { type: constant.TYPE_TEXT }
+				answer: {type: constant.TYPE_CHAR},
+				desc: {type: constant.TYPE_TEXT}
 			},
 		};
 	},
-	runReact : function () {
+	runReact: function () {
 		if (!window.cordova) {
 			window.appReact();
 		} else {

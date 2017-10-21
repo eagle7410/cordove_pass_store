@@ -11,8 +11,6 @@ import {login} from './Login';
 import {navMenu} from './NavMenu';
 import {alert} from './Alert'
 import {dataLoader} from './DataLoader'
-import {sdf} from './Settings/Sdf'
-import {sdfTools} from './Settings/SdfTools'
 import {dropBoxSettingsForm} from './Settings/DropBoxSettingsForm'
 import {dropBoxStepsUpload} from './Settings/DropBoxStepsUpload'
 import {dropBoxStepsDownload} from './Settings/DropBoxStepsDownload'
@@ -34,8 +32,6 @@ const reducer = combineReducers({
 	dataConfirm,
 	dataLoader,
 	navMenu,
-	sdf,
-	sdfTools,
 	dropBoxSettingsForm,
 	dropBoxStepsUpload,
 	dropBoxStepsDownload,

@@ -1,8 +1,29 @@
 import {save, move, update, reqFull, get} from '../utils/Req'
 import Routes from '../const/apiRoutes'
-
+/**
+ * @type {BrowerDataBaseClass|*}
+ */
+const db = function () {
+	return window.cordova.db;
+};
 const getPath           = data => reqFull(get, Routes.cloudGetPath, data);
-const setConfigFile     = data => reqFull(save, Routes.cloudSaveConfig, data);
+const setConfigFile     = async data => {
+	/**
+	 * @type {BrowerDataBaseClass|*}
+	 */
+	let connect = db();
+	let table = 'settings';
+
+	let doc = await connect.getByRequire(table, 'type', data.type);
+
+	let sett = JSON.parse(doc.data);
+
+	sett.config = data.config;
+	sett.isHaveConfig = true;
+
+	await connect.updateByPk(table, doc.id, {data : JSON.stringify(sett)});
+};
+
 const initConnect       = data => reqFull(get, Routes.cloudInit, data);
 const postArchive       = data => reqFull(save, Routes.cloudUploadArchive, data);
 const getArchive        = data => reqFull(get, Routes.cloudDownloadArchive, data);

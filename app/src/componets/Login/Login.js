@@ -18,10 +18,12 @@ class Login extends Component {
 
 		if (that.props.store.isLoaded !== true) {
 			loginList()
-				.then(that.props.onLoadedOk)
+				.then(list => {
+					that.props.onLoadedOk(list.map(user => user.login))
+				})
 				.catch((e) => {
-				console.log('err', e);
-				that.props.showAlert(Messages.noUserList, AlertStatus.BAD)
+					console.log('err', e);
+					that.props.showAlert(Messages.noUserList, AlertStatus.BAD)
 				});
 		}
 	}
@@ -48,17 +50,27 @@ class Login extends Component {
 
 	handelSubmit () {
 		let that = this;
-		let errors = that.validateData();
 
-		that.props.onSubmit();
+		const submit = async () => {
+			try {
+				let errors = that.validateData();
 
-		if (errors) {
-			return that.props.validateErrors(errors);
-		}
+				that.props.onSubmit();
 
-		auth(that.props.store.login, that.props.store.pass)
-			.then(that.props.onAuthOk)
-			.catch(that.props.onAuthBad);
+				if (errors) {
+					return that.props.validateErrors(errors);
+				}
+
+				let res = await auth(that.props.store.login, that.props.store.pass);
+
+				that.props.onAuthOk(res);
+
+			} catch (e) {
+				that.props.onAuthBad(e.message);
+			}
+		};
+
+		submit();
 	}
 
 	render () {

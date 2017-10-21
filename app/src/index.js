@@ -33,7 +33,7 @@ const appReact = () => {
 };
 
 if (!window.cordova) {
-	appReact();
+	window.appReact = appReact;
 } else {
 	window.cordova.appReact = appReact;
 }

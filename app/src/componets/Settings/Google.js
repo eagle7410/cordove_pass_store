@@ -22,24 +22,62 @@ const Google = (state) => {
 			.catch(err => state.showAlert('No init google drive', AlertStatus.BAD));
 	};
 
-	const loadConfig = () => {
-		getPath({})
-			.then(data => setConfigFile({...data, ...type}))
-			.then(data => {
-				state.isHaveConfig();
-				state.showAlert('Config is save', AlertStatus.OK)
-			})
-			.catch(err => state.showAlert('No load config', AlertStatus.BAD));
+	const getFileContent = ($ev) => new Promise((ok, bad) => {
+		let files = $ev.target.files;
+
+		if (!files.length) {
+			return ok('');
+		}
+
+		let reader = new FileReader();
+
+		reader.onload = () => {
+			ok(reader.result);
+		};
+
+		reader.readAsText(files[0]);
+	});
+
+	const loadConfig = async ($ev) => {
+		try {
+			let text = await getFileContent($ev);
+
+			if (!text) {
+				return state.showAlert('File empty', AlertStatus.BAD)
+			}
+
+			let data = JSON.parse(text);
+			await setConfigFile({config: data, type : 'google'});
+
+			state.isHaveConfig(data);
+			state.showAlert('Config is save', AlertStatus.OK)
+
+		} catch (e) {
+			console.log('Err: ', e);
+			state.showAlert('No load config', AlertStatus.BAD)
+		}
+
 	};
 
 	return (
 		<Tabs >
 			<Tab label='Upload to Google' icon={<ActionUp />} >
-				<CouldConnect store={state.connect} init={InitConnect} load_config={loadConfig}/>
+				<CouldConnect
+					store={state.connect}
+					init={InitConnect}
+					load_config={loadConfig}
+					tools_open={state.toolsOpen}
+					tools_close={state.toolsClose}
+					handel_file_change={loadConfig}
+				/>
 				<StepsUpload  steps={state.stepsUpload} type={type} connect={state.connect}  />
 			</Tab>
 			<Tab label='Download from Google' icon={<ActionDown />} >
-				<CouldConnect  store={state.connect} init={InitConnect} load_config={loadConfig}/>
+				<CouldConnect  store={state.connect} init={InitConnect} load_config={loadConfig}
+				               tools_open={state.toolsOpen}
+				               tools_close={state.toolsClose}
+				               handel_file_change={loadConfig}
+				/>
 				<StepsDownload steps={state.stepsDownload} type={type} connect={state.connect}  />
 			</Tab>
 		</Tabs>
@@ -63,5 +101,7 @@ export default connect(
 		}),
 		isHaveConfig : () => dispatch({type : GoogleConnect.isHaveConfig}),
 		init : () => dispatch({type : GoogleConnect.init}),
+		toolsOpen : () => dispatch({type : GoogleConnect.toolsOpen}),
+		toolsClose : () => dispatch({type : GoogleConnect.toolsClose}),
 	})
 )(Google);
