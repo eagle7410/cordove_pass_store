@@ -17,29 +17,116 @@
  * under the License.
  */
 var app = {
-    // Application Constructor
-    initialize: function() {
-        document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
-    },
+	// Application Constructor
+	initialize: function () {
+		document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
+	},
 
-    // deviceready Event Handler
-    //
-    // Bind any cordova events here. Common events are:
-    // 'pause', 'resume', etc.
-    onDeviceReady: function() {
-        this.receivedEvent('deviceready');
+	// deviceready Event Handler
+	//
+	// Bind any cordova events here. Common events are:
+	// 'pause', 'resume', etc.
+	onDeviceReady: function () {
+		this.receivedEvent('deviceready');
 
-    },
+	},
 
-    // Update DOM on a Received Event
-    receivedEvent: function(id) {
-	    if (!window.cordova) {
-		    window.appReact();
-	    } else {
-		    window.cordova.appReact();
-        }
+	// Update DOM on a Received Event
+	receivedEvent: function (id) {
+		var that = this;
+		that._db = new window.BrowerDataBaseClass({name : 'pass_store'});
+		that._db.init()
 
-    }
+			.catch(function (err) {
+				console.log('Error :', err);
+			});
+		that.runReact();
+	},
+	_db_struct : function () {
+		var that = this;
+		var constant = that._db.queryConst();
+
+		return {
+			users : {
+				id: {
+					type: constant.TYPE_INT,
+						pk: {
+						order: constant.ASC
+					}
+				},
+				login: {
+					type: constant.TYPE_CHAR+ '(20)' ,
+					require: true,
+					unique: true
+				},
+				pass: {
+					type: constant.TYPE_CHAR
+				}
+			},
+			settings : {
+				id: {
+					type: constant.TYPE_INT,
+					pk: {
+						order: constant.ASC
+					}
+				},
+				type : {
+					type: constant.TYPE_CHAR+ '(20)' ,
+					require: true,
+					unique: true
+				},
+				data : { type: constant.TYPE_TEXT }
+			},
+			categories : {
+				id: {
+					type: constant.TYPE_INT,
+					pk: {
+						order: constant.ASC
+					}
+				},
+				name: {
+					type: constant.TYPE_CHAR+ '(100)' ,
+					require: true,
+					unique: true
+				},
+			},
+			storage : {
+				id: {
+					type: constant.TYPE_INT,
+					pk: {
+						order: constant.ASC
+					}
+				},
+				category : {
+					id: {
+						type: constant.TYPE_INT,
+						require: true
+					},
+				},
+				title : {
+					type: constant.TYPE_CHAR,
+					require: true
+				},
+				login : {
+					type: constant.TYPE_CHAR,
+					require: true
+				},
+				pass  : {
+					type: constant.TYPE_CHAR
+				},
+				answer : { type: constant.TYPE_CHAR },
+				desc : { type: constant.TYPE_TEXT }
+			},
+		};
+	},
+	runReact : function () {
+		if (!window.cordova) {
+			window.appReact();
+		} else {
+			window.cordova.appReact();
+		}
+	}
+
 };
 
 app.initialize();
