@@ -5,11 +5,11 @@ import RaisedButton from 'material-ui/RaisedButton';
 import {StepsDownload as Events,Alert, StorageCategory, Users, Storage} from '../../../const/Events'
 import {DropBox} from '../../../const/Messages'
 import AlertStatus from '../../../const/AlertStatus'
-import {styleBlock, styleButtonBlock} from '../../../const/Styles'
+import {styleBlock, styleButtonBlock, styleInputFile} from '../../../const/Styles'
 import {getArchive, extractArchive, mergeArchive, clearArchive} from '../../../api/Cloud'
 import {fullData} from '../../../api/Loader'
 import StepsSimpleContent from './StepsSimpleContent'
-
+import ActionLoad from 'material-ui/svg-icons/file/file-download';
 
 const StepsDownload = (state) => {
 	const store    = state.steps;
@@ -18,7 +18,7 @@ const StepsDownload = (state) => {
 	const finished  = store.finished;
 	const stepIndex = store.stepIndex;
 	const loading   = store.loading;
-	const handelRun = async () => {
+	const handelDownload = async () => {
 		let date;
 
 		try {
@@ -57,22 +57,33 @@ const StepsDownload = (state) => {
 	return (
 		<div style={styleBlock}>
 			<div style={styleButtonBlock}>
+				{/*<RaisedButton*/}
+					{/*label={'Run'}*/}
+					{/*disabled={actionDisable}*/}
+					{/*primary={true}*/}
+					{/*onTouchTap={handelRun}*/}
+				{/*/>*/}
 				<RaisedButton
-					label={'Run'}
-					disabled={actionDisable}
-					primary={true}
-					onTouchTap={handelRun}
-				/>
-				<RaisedButton
-					label={'Restart'}
-					disabled={!finished}
+					label='Download'
+					labelPosition="before"
 					secondary={true}
-					onTouchTap={() => state.reset(typeData)}
-				/>
+					icon={<ActionLoad />}
+				>
+					<input type="file"
+					       style={styleInputFile}
+					       onChange={handelDownload}
+					/>
+				</RaisedButton>
+				{/*<RaisedButton*/}
+					{/*label={'Restart'}*/}
+					{/*disabled={!finished}*/}
+					{/*secondary={true}*/}
+					{/*onTouchTap={() => state.reset(typeData)}*/}
+				{/*/>*/}
 				<StepsSimpleContent finished={finished} loading={loading} stop={store.stop}/>
 			</div>
-			<Stepper activeStep={stepIndex}>
-				<Step><StepLabel>Download from DropBox</StepLabel></Step>
+			<Stepper activeStep={stepIndex} orientation="vertical">
+				<Step><StepLabel>Download</StepLabel></Step>
 				<Step><StepLabel>Extract archive</StepLabel></Step>
 				<Step><StepLabel>Merge data</StepLabel></Step>
 				<Step><StepLabel>Clear</StepLabel></Step>

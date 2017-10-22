@@ -15,6 +15,9 @@ const Storage = () => (
 		<NavMenu />
 		<h1>Storage</h1>
 		<Tabs>
+			<Tab label="Categories" icon={<IconCategory/>} >
+				<Categories/>
+			</Tab>
 			<Tab label="Data" icon={<IconStore />} >
 				<Paper zDepth={2}>
 					<Tools />
@@ -23,9 +26,6 @@ const Storage = () => (
 			</Tab>
 			<Tab label="Add record" icon={<IconAdd/>} >
 				<Add/>
-			</Tab>
-			<Tab label="Categories" icon={<IconCategory/>} >
-				<Categories/>
 			</Tab>
 		</Tabs>
 	</div>

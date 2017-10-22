@@ -4,7 +4,8 @@ const initialState = {
 	noChoice : [2],
 	onEdit   : false,
 	editName : '',
-	addName  : ''
+	addName  : '',
+	isOpenAddingTools : false
 };
 
 const storageCategories = (state = initialState, action) => {
@@ -12,6 +13,16 @@ const storageCategories = (state = initialState, action) => {
 
 	// eslint-disable-next-line
 	switch (action.type) {
+		case StorageCategory.addingToolsOpen:
+			return {
+				...state,
+				isOpenAddingTools : true
+			};
+		case StorageCategory.addingToolsClose:
+			return {
+				...state,
+				isOpenAddingTools : false
+			};
 		case StorageCategory.init:
 			return {
 				...state,

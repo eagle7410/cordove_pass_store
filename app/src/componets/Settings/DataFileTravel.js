@@ -4,13 +4,13 @@ import ActionDown from 'material-ui/svg-icons/file/cloud-download';
 import ActionUp from 'material-ui/svg-icons/file/cloud-upload';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import {connect} from 'react-redux';
-import CouldConnect from './Cloud/CouldConnect'
-import StepsDownload from './Cloud/StepsDownload'
-import StepsUpload from './Cloud/StepsUpload'
+import CouldConnect from './DataFileTravel/CouldConnect'
+import Download from './DataFileTravel/Download'
+import Upload from './DataFileTravel/Upload'
 import {Alert, GoogleConnect} from '../../const/Events'
 import AlertStatus from '../../const/AlertStatus'
 
-const Google = (state) => {
+const DataFileTravel = (state) => {
 	const type = {type : 'google'};
 
 	const InitConnect = () => {
@@ -61,7 +61,15 @@ const Google = (state) => {
 
 	return (
 		<Tabs >
-			<Tab label='Upload to Google' icon={<ActionUp />} >
+			<Tab label='Download' icon={<ActionDown />} >
+				<CouldConnect  store={state.connect} init={InitConnect} load_config={loadConfig}
+				               tools_open={state.toolsOpen}
+				               tools_close={state.toolsClose}
+				               handel_file_change={loadConfig}
+				/>
+				<Download steps={state.stepsDownload} type={type} connect={state.connect}  />
+			</Tab>
+			<Tab label='Upload' icon={<ActionUp />} >
 				<CouldConnect
 					store={state.connect}
 					init={InitConnect}
@@ -70,16 +78,9 @@ const Google = (state) => {
 					tools_close={state.toolsClose}
 					handel_file_change={loadConfig}
 				/>
-				<StepsUpload  steps={state.stepsUpload} type={type} connect={state.connect}  />
+				<Upload  steps={state.stepsUpload} type={type} connect={state.connect}  />
 			</Tab>
-			<Tab label='Download from Google' icon={<ActionDown />} >
-				<CouldConnect  store={state.connect} init={InitConnect} load_config={loadConfig}
-				               tools_open={state.toolsOpen}
-				               tools_close={state.toolsClose}
-				               handel_file_change={loadConfig}
-				/>
-				<StepsDownload steps={state.stepsDownload} type={type} connect={state.connect}  />
-			</Tab>
+
 		</Tabs>
 	);
 
@@ -104,4 +105,4 @@ export default connect(
 		toolsOpen : () => dispatch({type : GoogleConnect.toolsOpen}),
 		toolsClose : () => dispatch({type : GoogleConnect.toolsClose}),
 	})
-)(Google);
+)(DataFileTravel);

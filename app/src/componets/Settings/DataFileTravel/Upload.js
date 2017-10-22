@@ -52,7 +52,7 @@ const StepsUpload = (state) => {
 				/>
 				<StepsSimpleContent finished={finished} loading={loading} stop={store.stop}/>
 			</div>
-			<Stepper activeStep={stepIndex}>
+			<Stepper activeStep={stepIndex} orientation="vertical">
 				<Step><StepLabel>Create acrhive</StepLabel></Step>
 				<Step><StepLabel>Upload to DropBox</StepLabel></Step>
 			</Stepper>
