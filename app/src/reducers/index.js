@@ -11,12 +11,8 @@ import {login} from './Login';
 import {navMenu} from './NavMenu';
 import {alert} from './Alert'
 import {dataLoader} from './DataLoader'
-import {dropBoxSettingsForm} from './Settings/DropBoxSettingsForm'
-import {dropBoxStepsUpload} from './Settings/DropBoxStepsUpload'
-import {dropBoxStepsDownload} from './Settings/DropBoxStepsDownload'
-import {googleSettingsForm} from './Settings/GoogleSettingsForm'
-import {googleStepsUpload} from './Settings/GoogleStepsUpload'
-import {googleStepsDownload} from './Settings/GoogleStepsDownload'
+import {stepsUpload} from './Settings/StepsUpload'
+import {stepsDownload} from './Settings/StepsDownload'
 
 
 const reducer = combineReducers({
@@ -32,12 +28,8 @@ const reducer = combineReducers({
 	dataConfirm,
 	dataLoader,
 	navMenu,
-	dropBoxSettingsForm,
-	dropBoxStepsUpload,
-	dropBoxStepsDownload,
-	googleSettingsForm,
-	googleStepsUpload,
-	googleStepsDownload
+	stepsUpload,
+	stepsDownload
 });
 
 export {reducer};

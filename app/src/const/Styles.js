@@ -44,22 +44,6 @@ const styleContent = {
 const styleCategoryEdit = {
 	top: '23px'
 };
-const styleDiv = {
-	display : 'block'
-};
-const styleIcon = {
-	marginLeft:10
-};
-
-const styleIconEnable = {
-	...styleIcon,
-	color : ok
-};
-
-const styleIconDisable = {
-	...styleIcon,
-	color : bad
-};
 
 const styleInputFile = {
 	cursor: 'pointer',
@@ -79,9 +63,5 @@ export {
 	styleBlock, styleButtonBlock,
 	styleContent,
 	styleCategoryEdit,
-	styleDiv,
-	styleIconDisable,
-	styleIconEnable,
-	styleIcon,
 	styleInputFile
 }

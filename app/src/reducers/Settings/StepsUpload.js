@@ -7,7 +7,7 @@ const initialState = {
 	stop      : false
 };
 
-const googleStepsUpload  = (state = initialState, action) => {
+const stepsUpload  = (state = initialState, action) => {
 
 	if (action.data !== 'google') {
 		return state;
@@ -45,4 +45,4 @@ const googleStepsUpload  = (state = initialState, action) => {
 	return state;
 };
 
-export {googleStepsUpload};
+export {stepsUpload};

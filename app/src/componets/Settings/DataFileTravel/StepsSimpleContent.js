@@ -1,8 +1,7 @@
 import React from 'react';
 import LoadAnimation from '../../tools/LoadAnimation'
 import {objBad, objOk} from '../../../const/Objects'
-
-const styleContent = {margin: '0 16px', overflow: 'hidden'};
+import {styleContent} from '../../../const/Styles'
 
 const StepsSimpleContent = (state) => {
 	if (state.finished) {

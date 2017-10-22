@@ -1,8 +1,6 @@
 import StorageCategory from './StorageCategory';
 import StorageFilters  from './StorageFilters';
-import DropBoxConnect from './DropBoxConnect';
 import StepsDownload from './StepsDownload';
-import GoogleConnect from './GoogleConnect';
 import StepsConnect from './StepsConnect'
 import StepsUpload from './StepsUpload';
 import DataLoader from './DataLoader';
@@ -17,9 +15,7 @@ import Sdf from './Sdf';
 
 export {
 	StorageCategory,
-	DropBoxConnect,
 	StorageFilters,
-	GoogleConnect,
 	StepsDownload,
 	StepsConnect,
 	StepsUpload,

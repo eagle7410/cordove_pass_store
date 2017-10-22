@@ -4,23 +4,13 @@ import ActionDown from 'material-ui/svg-icons/file/cloud-download';
 import ActionUp from 'material-ui/svg-icons/file/cloud-upload';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import {connect} from 'react-redux';
-import CouldConnect from './DataFileTravel/CouldConnect'
 import Download from './DataFileTravel/Download'
 import Upload from './DataFileTravel/Upload'
-import {Alert, GoogleConnect} from '../../const/Events'
+import {Alert} from '../../const/Events'
 import AlertStatus from '../../const/AlertStatus'
 
 const DataFileTravel = (state) => {
 	const type = {type : 'google'};
-
-	const InitConnect = () => {
-		initConnect(type)
-			.then(data => {
-				state.init();
-				state.showAlert('Google drive is init', AlertStatus.OK)
-			})
-			.catch(err => state.showAlert('No init google drive', AlertStatus.BAD));
-	};
 
 	const getFileContent = ($ev) => new Promise((ok, bad) => {
 		let files = $ev.target.files;
@@ -38,6 +28,7 @@ const DataFileTravel = (state) => {
 		reader.readAsText(files[0]);
 	});
 
+	// TODO: Back Use
 	const loadConfig = async ($ev) => {
 		try {
 			let text = await getFileContent($ev);
@@ -62,23 +53,10 @@ const DataFileTravel = (state) => {
 	return (
 		<Tabs >
 			<Tab label='Download' icon={<ActionDown />} >
-				<CouldConnect  store={state.connect} init={InitConnect} load_config={loadConfig}
-				               tools_open={state.toolsOpen}
-				               tools_close={state.toolsClose}
-				               handel_file_change={loadConfig}
-				/>
-				<Download steps={state.stepsDownload} type={type} connect={state.connect}  />
+				<Download steps={state.stepsDownload} type={type} />
 			</Tab>
 			<Tab label='Upload' icon={<ActionUp />} >
-				<CouldConnect
-					store={state.connect}
-					init={InitConnect}
-					load_config={loadConfig}
-					tools_open={state.toolsOpen}
-					tools_close={state.toolsClose}
-					handel_file_change={loadConfig}
-				/>
-				<Upload  steps={state.stepsUpload} type={type} connect={state.connect}  />
+				<Upload  steps={state.stepsUpload} type={type} />
 			</Tab>
 
 		</Tabs>
@@ -88,9 +66,8 @@ const DataFileTravel = (state) => {
 
 export default connect(
 	state => ({
-		connect : state.googleSettingsForm,
-		stepsUpload : state.googleStepsUpload,
-		stepsDownload : state.googleStepsDownload,
+		stepsUpload : state.stepsUpload,
+		stepsDownload : state.stepsDownload,
 	}),
 	dispatch => ({
 		showAlert   : (mess, type) => dispatch({
@@ -100,9 +77,5 @@ export default connect(
 				status: type
 			}
 		}),
-		isHaveConfig : () => dispatch({type : GoogleConnect.isHaveConfig}),
-		init : () => dispatch({type : GoogleConnect.init}),
-		toolsOpen : () => dispatch({type : GoogleConnect.toolsOpen}),
-		toolsClose : () => dispatch({type : GoogleConnect.toolsClose}),
 	})
 )(DataFileTravel);

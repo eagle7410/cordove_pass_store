@@ -3,7 +3,6 @@ import {connect} from 'react-redux';
 import { Step, Stepper, StepLabel} from 'material-ui/Stepper';
 import RaisedButton from 'material-ui/RaisedButton';
 import {StepsDownload as Events,Alert, StorageCategory, Users, Storage} from '../../../const/Events'
-import {DropBox} from '../../../const/Messages'
 import AlertStatus from '../../../const/AlertStatus'
 import {styleBlock, styleButtonBlock, styleInputFile} from '../../../const/Styles'
 import {getArchive, extractArchive, mergeArchive, clearArchive} from '../../../api/Cloud'
@@ -14,7 +13,6 @@ import ActionLoad from 'material-ui/svg-icons/file/file-download';
 const StepsDownload = (state) => {
 	const store    = state.steps;
 	const typeData = state.type;
-	const connect  = state.connect ;
 	const finished  = store.finished;
 	const stepIndex = store.stepIndex;
 	const loading   = store.loading;
@@ -48,11 +46,11 @@ const StepsDownload = (state) => {
 		} catch (err) {
 			console.log('err ', err);
 			state.stop(typeData);
-			state.showAlert(DropBox.badTryUpload, AlertStatus.BAD);
+			state.showAlert('Bad load', AlertStatus.BAD);
 		}
 	};
 
-	const actionDisable = !connect.init || loading;
+	const actionDisable = loading;
 
 	return (
 		<div style={styleBlock}>

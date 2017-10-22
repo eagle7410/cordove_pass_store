@@ -24,7 +24,6 @@ const setConfigFile     = async data => {
 	await connect.updateByPk(table, doc.id, {data : JSON.stringify(sett)});
 };
 
-const initConnect       = data => reqFull(get, Routes.cloudInit, data);
 const postArchive       = data => reqFull(save, Routes.cloudUploadArchive, data);
 const getArchive        = data => reqFull(get, Routes.cloudDownloadArchive, data);
 const putCloudArchive   = data => reqFull(update, Routes.cloudUpload, data);
@@ -35,7 +34,6 @@ const clearArchive      = date => reqFull(move, Routes.cloudDownloadArchiveClear
 export {
 	getPath,
 	setConfigFile,
-	initConnect,
 	postArchive,
 	putCloudArchive,
 	getArchive,

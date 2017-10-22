@@ -3,7 +3,6 @@ import {connect} from 'react-redux';
 import { Step, Stepper, StepLabel} from 'material-ui/Stepper';
 import RaisedButton from 'material-ui/RaisedButton';
 import {StepsUpload as Events, Alert} from '../../../const/Events'
-import {DropBox} from '../../../const/Messages'
 import AlertStatus from '../../../const/AlertStatus'
 import {postArchive, putCloudArchive} from '../../../api/Cloud'
 import StepsSimpleContent from './StepsSimpleContent'
@@ -13,7 +12,6 @@ const styleButtonBlock = {marginTop: 24, marginBottom: 12};
 
 const StepsUpload = (state) => {
 	const store    = state.steps;
-	const connect  = state.connect ;
 	const typeData = state.type;
 	const finished  = store.finished;
 	const stepIndex = store.stepIndex;
@@ -29,11 +27,11 @@ const StepsUpload = (state) => {
 			.catch(err => {
 				state.stop(typeData);
 				console.log('Error create archive', err);
-				state.showAlert(DropBox.badTryUpload, AlertStatus.BAD)
+				state.showAlert('Bad upload', AlertStatus.BAD)
 			});
 	};
 
-	const actionDisable = !connect.init || loading;
+	const actionDisable = loading;
 
 	return (
 		 <div style={styleBlock}>

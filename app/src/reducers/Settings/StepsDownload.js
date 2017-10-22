@@ -7,7 +7,7 @@ const initialState = {
 	stop      : false
 };
 
-const googleStepsDownload  = (state = initialState, action) => {
+const stepsDownload  = (state = initialState, action) => {
 
 	if (action.data !== 'google') {
 		return state;
@@ -46,4 +46,4 @@ const googleStepsDownload  = (state = initialState, action) => {
 	return state;
 };
 
-export {googleStepsDownload};
+export {stepsDownload};
