@@ -5,48 +5,57 @@ import RaisedButton from 'material-ui/RaisedButton';
 import {StepsDownload as Events,Alert, StorageCategory, Users, Storage} from '../../../const/Events'
 import AlertStatus from '../../../const/AlertStatus'
 import {styleBlock, styleButtonBlock, styleInputFile} from '../../../const/Styles'
-import {getArchive, extractArchive, mergeArchive, clearArchive} from '../../../api/Cloud'
-import {fullData} from '../../../api/Loader'
+import {extractArchiveAndMigrate} from '../../../api/DataFIle'
 import StepsSimpleContent from './StepsSimpleContent'
 import ActionLoad from 'material-ui/svg-icons/file/file-download';
 
 const StepsDownload = (state) => {
 	const store    = state.steps;
-	const typeData = state.type;
 	const finished  = store.finished;
 	const stepIndex = store.stepIndex;
 	const loading   = store.loading;
-	const handelDownload = async () => {
-		let date;
+
+	const getFileContent = ($ev) => new Promise((ok, bad) => {
+		let files = $ev.target.files;
+
+		if (!files.length) {
+			return ok('');
+		}
+
+		let reader = new FileReader();
+
+		reader.onload = () => {
+			ok(reader.result);
+		};
+
+		reader.readAsBinaryString(files[0]);
+	});
+
+	const handelClick = ($ev) => {
+		if (loading) {
+			$ev.preventDefault();
+		}
+	};
+
+	const handelDownload = async ($ev)  => {
 
 		try {
-			state.run(typeData);
+			state.reset();
+			state.run();
 
-			date = await getArchive(typeData);
-			state.next(typeData);
+			let binary = await getFileContent($ev);
 
-			date = await extractArchive(date);
-			state.next(typeData);
-
-			date = await mergeArchive(date);
-			state.next(typeData);
-
-			await clearArchive(date);
-
-			state.next(typeData);
-
-			let updData = await fullData();
-
-			['Categories', 'Users', 'Storage'].forEach(
-				p => state[`init${p}`](updData[p.toLowerCase()])
-			);
-
-			state.next(typeData);
+			if (!binary) {
+				throw new Error('Binary data is empty');
+			} else {
+				extractArchiveAndMigrate(state, binary);
+				state.next();
+			}
 
 		} catch (err) {
 			console.log('err ', err);
-			state.stop(typeData);
-			state.showAlert('Bad load', AlertStatus.BAD);
+			state.stop();
+			state.showAlert('Fail load data file.', AlertStatus.BAD);
 		}
 	};
 
@@ -55,36 +64,28 @@ const StepsDownload = (state) => {
 	return (
 		<div style={styleBlock}>
 			<div style={styleButtonBlock}>
-				{/*<RaisedButton*/}
-					{/*label={'Run'}*/}
-					{/*disabled={actionDisable}*/}
-					{/*primary={true}*/}
-					{/*onTouchTap={handelRun}*/}
-				{/*/>*/}
 				<RaisedButton
 					label='Download'
 					labelPosition="before"
 					secondary={true}
-					icon={<ActionLoad />}
+					icon={
+						actionDisable
+						 ? <StepsSimpleContent finished={finished} loading={loading} stop={store.stop}/>
+						:<ActionLoad />
+					}
+					disabled={actionDisable}
 				>
 					<input type="file"
 					       style={styleInputFile}
 					       onChange={handelDownload}
+					       onClick={handelClick}
 					/>
 				</RaisedButton>
-				{/*<RaisedButton*/}
-					{/*label={'Restart'}*/}
-					{/*disabled={!finished}*/}
-					{/*secondary={true}*/}
-					{/*onTouchTap={() => state.reset(typeData)}*/}
-				{/*/>*/}
-				<StepsSimpleContent finished={finished} loading={loading} stop={store.stop}/>
 			</div>
 			<Stepper activeStep={stepIndex} orientation="vertical">
 				<Step><StepLabel>Download</StepLabel></Step>
 				<Step><StepLabel>Extract archive</StepLabel></Step>
 				<Step><StepLabel>Merge data</StepLabel></Step>
-				<Step><StepLabel>Clear</StepLabel></Step>
 				<Step><StepLabel>Update App</StepLabel></Step>
 			</Stepper>
 		</div>
@@ -94,10 +95,10 @@ const StepsDownload = (state) => {
 export default connect(
 	state => ({}),
 	dispatch => ({
-		run       : (typeData) => dispatch({type : Events.run,   data: typeData.type}),
-		stop      : (typeData) => dispatch({type : Events.stop,  data: typeData.type}),
-		next      : (typeData) => dispatch({type : Events.next,  data: typeData.type}),
-		reset     : (typeData) => dispatch({type : Events.reset, data: typeData.type}),
+		run       : (typeData) => dispatch({type : Events.run,}),
+		stop      : (typeData) => dispatch({type : Events.stop}),
+		next      : (typeData) => dispatch({type : Events.next}),
+		reset     : (typeData) => dispatch({type : Events.reset}),
 
 		initUsers      : data  => dispatch({type: Users.init , data: data}),
 		initStorage    : data  => dispatch({type: Storage.init , data: data}),

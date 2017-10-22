@@ -11,7 +11,7 @@ const Settings = () => (
 		<NavMenu />
 		<h1>Settings</h1>
 		<Tabs initialSelectedIndex={0}>
-			<Tab label='Work with data file' icon={<IconCloud/>}  style={tabSettings}>
+			<Tab label='Work with data JSON file' icon={<IconCloud/>}  style={tabSettings}>
 				<Paper zDepth={2}>
 					<DataFileTravel/>
 				</Paper>

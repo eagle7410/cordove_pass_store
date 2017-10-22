@@ -16,7 +16,7 @@ const StepsSimpleContent = (state) => {
 
 	return (
 		<div style={styleContent}>
-			<div>{state.loading ? <LoadAnimation key={'anima'} /> : <div/>}</div>
+			{state.loading ? <LoadAnimation key={'anima'} /> : <div/>}
 		</div>
 	);
 };

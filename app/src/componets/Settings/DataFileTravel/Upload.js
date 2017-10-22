@@ -4,7 +4,7 @@ import { Step, Stepper, StepLabel} from 'material-ui/Stepper';
 import RaisedButton from 'material-ui/RaisedButton';
 import {StepsUpload as Events, Alert} from '../../../const/Events'
 import AlertStatus from '../../../const/AlertStatus'
-import {postArchive, putCloudArchive} from '../../../api/Cloud'
+import {postArchive, putCloudArchive} from '../../../api/DataFIle'
 import StepsSimpleContent from './StepsSimpleContent'
 
 const styleBlock       = {width: '100%', maxWidth: 700, margin: 'auto'};

@@ -38,8 +38,9 @@ const styleButtonBlock = {
 	marginBottom: 12
 };
 const styleContent = {
-	margin: '0 16px',
-	overflow: 'hidden'
+	overflow: 'hidden',
+	position : 'absolute',
+	left : '120%',
 };
 const styleCategoryEdit = {
 	top: '23px'

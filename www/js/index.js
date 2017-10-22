@@ -136,14 +136,13 @@ var app = {
 					}
 				},
 				category: {
-					id: {
-						type: constant.TYPE_INT,
-						require: true
-					},
+					type: constant.TYPE_INT,
+					require: true
 				},
 				title: {
 					type: constant.TYPE_CHAR,
-					require: true
+					require: true,
+					unique: true
 				},
 				login: {
 					type: constant.TYPE_CHAR,

@@ -9,10 +9,6 @@ const initialState = {
 
 const stepsDownload  = (state = initialState, action) => {
 
-	if (action.data !== 'google') {
-		return state;
-	}
-
 	// eslint-disable-next-line
 	switch (action.type) {
 		case StepsDownload.reset:
@@ -39,7 +35,8 @@ const stepsDownload  = (state = initialState, action) => {
 			return {
 				...state,
 				stepIndex : next,
-				finished : next === 5
+				loading : next !== 4,
+				finished : next === 4
 			};
 	}
 
