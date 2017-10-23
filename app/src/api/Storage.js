@@ -1,10 +1,32 @@
-import {get, update, save , move, reqFull} from '../utils/Req'
-import Routes from '../const/apiRoutes'
 
-const type = Routes.store;
-const list       = ()   => reqFull(get   , type);
-const edit       = data => reqFull(update, type, data);
-const del        = id   => reqFull(move  , type, id);
-const addRecord  = data => reqFull(save  , type, data);
+const table = 'storage';
+/**
+ * @type {BrowserDataBaseClass}
+ */
+const db = function () {
+	return window.cordova.db;
+};
 
-export {addRecord, edit, del, list};
+const edit = async data => {
+	await db().upInsert(table, data);
+
+	return true;
+};
+
+const del = async id => {
+	await db().removeByPk(table, Number(id));
+
+	return true;
+};
+
+const addRecord = async data => {
+	let database = db();
+
+	await database.upInsert(table, data);
+
+	let newData = await database.getByRequire(table, 'title', data.title);
+
+	return newData;
+};
+
+export {addRecord, edit, del};

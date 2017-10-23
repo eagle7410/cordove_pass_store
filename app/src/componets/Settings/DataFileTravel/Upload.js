@@ -1,72 +1,78 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import { Step, Stepper, StepLabel} from 'material-ui/Stepper';
+import {Step, Stepper, StepLabel} from 'material-ui/Stepper';
 import RaisedButton from 'material-ui/RaisedButton';
 import {StepsUpload as Events, Alert} from '../../../const/Events'
 import AlertStatus from '../../../const/AlertStatus'
-import {postArchive, putCloudArchive} from '../../../api/DataFIle'
+import {postArchive, putCloudArchive, getDataJsonFile} from '../../../api/DataFIle'
 import StepsSimpleContent from './StepsSimpleContent'
+import ActionUpload from 'material-ui/svg-icons/file/file-upload';
 
-const styleBlock       = {width: '100%', maxWidth: 700, margin: 'auto'};
+const styleBlock = {width: '100%', maxWidth: 700, margin: 'auto'};
 const styleButtonBlock = {marginTop: 24, marginBottom: 12};
 
 const StepsUpload = (state) => {
-	const store    = state.steps;
-	const typeData = state.type;
-	const finished  = store.finished;
+	const store = state.steps;
+	const finished = store.finished;
 	const stepIndex = store.stepIndex;
-	const loading   = store.loading;
+	const loading = store.loading;
+
 	const handelRun = () => {
-		state.run(typeData);
-		postArchive()
-			.then(date => {
-				state.next(typeData);
-				return putCloudArchive({...typeData, date : date});
-			})
-			.then(() => state.next(typeData))
-			.catch(err => {
-				state.stop(typeData);
-				console.log('Error create archive', err);
-				state.showAlert('Bad upload', AlertStatus.BAD)
-			});
+		alert('run');
+		state.reset();
+		state.run();
+
+		getDataJsonFile(state);
+
+		// postArchive()
+		// 	.then(date => {
+		// 		state.next(typeData);
+		// 		return putCloudArchive({...typeData, date : date});
+		// 	})
+		// 	.then(() => state.next(typeData))
+		// 	.catch(err => {
+		// 		state.stop(typeData);
+		// 		console.log('Error create archive', err);
+		// 		state.showAlert('Bad upload', AlertStatus.BAD)
+		// 	});
 	};
 
 	const actionDisable = loading;
 
 	return (
-		 <div style={styleBlock}>
-			 <div style={styleButtonBlock}>
+		<div style={styleBlock}>
+			<div style={styleButtonBlock}>
 				<RaisedButton
-					label={'Run'}
-					disabled={actionDisable}
-					primary={true}
-					onTouchTap={handelRun}
-				/>
-				<RaisedButton
-					label={'Restart'}
-					disabled={!finished}
+					label='Upload'
+					labelPosition="before"
 					secondary={true}
-					onTouchTap={() => state.reset(typeData)}
+					icon={
+						actionDisable
+							? <StepsSimpleContent finished={finished} loading={loading} stop={store.stop}/>
+							: <ActionUpload />
+					}
+					disabled={actionDisable}
+					onTouchTap={handelRun}
 				/>
 				<StepsSimpleContent finished={finished} loading={loading} stop={store.stop}/>
 			</div>
 			<Stepper activeStep={stepIndex} orientation="vertical">
 				<Step><StepLabel>Create acrhive</StepLabel></Step>
-				<Step><StepLabel>Upload to DropBox</StepLabel></Step>
+				<Step><StepLabel>Upload</StepLabel></Step>
 			</Stepper>
 
-		  </div>
-		);
+		</div>
+	);
 }
 
 export default connect(
 	state => ({}),
 	dispatch => ({
-		run       : (typeData) => dispatch({type : Events.run,    data: typeData.type}),
-		stop      : (typeData) => dispatch({type : Events.stop,   data: typeData.type}),
-		next      : (typeData) => dispatch({type : Events.next,   data: typeData.type}),
-		reset     : (typeData) => dispatch({type : Events.reset,  data: typeData.type}),
-		showAlert : (mess, type) => dispatch({
+		run: () => dispatch({type: Events.run}),
+		stop: () => dispatch({type: Events.stop}),
+		next: () => dispatch({type: Events.next}),
+		reset: () => dispatch({type: Events.reset}),
+		showAlert: (mess, type) => dispatch({
 			type: Alert.show, data: {
 				message: mess,
 				status: type

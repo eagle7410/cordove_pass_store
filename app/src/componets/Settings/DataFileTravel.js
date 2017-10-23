@@ -15,7 +15,6 @@ const DataFileTravel = (state) => {
 			<Tab label='Upload' icon={<ActionUp />} >
 				<Upload  steps={state.stepsUpload} />
 			</Tab>
-
 		</Tabs>
 	);
 };

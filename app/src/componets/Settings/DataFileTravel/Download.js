@@ -55,7 +55,7 @@ const StepsDownload = (state) => {
 		} catch (err) {
 			console.log('err ', err);
 			state.stop();
-			state.showAlert('Fail load data file.', AlertStatus.BAD);
+			state.showAlert((err.message || (err.target && err.target.error.message ) || err), AlertStatus.BAD);
 		}
 	};
 

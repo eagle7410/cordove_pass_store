@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
+import {Toolbar, ToolbarGroup, ToolbarTitle} from 'material-ui/Toolbar';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import ActionAdd from 'material-ui/svg-icons/content/add-circle';
@@ -14,20 +14,23 @@ import Drawer from 'material-ui/Drawer';
 const CategoriesTools = (state) => {
 	let store = state.store;
 
-	const handelSave = () => {
-		const val = store.addName;
+	const handelSave = async () => {
+		try {
+			const val = store.addName;
 
-		if (!val) {
-			return state.showAlert(Alert.empty, AlertStatus.BAD);
+			if (!val) {
+				return state.showAlert(Alert.empty, AlertStatus.BAD);
+			}
+
+			let newCat = await add(val);
+
+			state.save(newCat);
+			state.toolsClose();
+			state.showAlert(Alert.save, AlertStatus.OK);
+
+		} catch (err) {
+			state.showAlert((err.message || (err.target && err.target.error.message ) || err), AlertStatus.BAD)
 		}
-
-		add(val)
-			.then(data => {
-				state.save(data);
-				state.toolsOpen();
-				state.showAlert(Alert.save, AlertStatus.OK);
-			})
-			.catch(err => state.showAlert(err, AlertStatus.BAD));
 	};
 
 	return (
@@ -63,8 +66,6 @@ const CategoriesTools = (state) => {
 					icon={<ActionAdd />}
 					onTouchTap={handelSave}
 				/>
-
-
 			</Drawer>
 		</div>
 	);

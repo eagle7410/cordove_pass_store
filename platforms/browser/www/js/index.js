@@ -38,8 +38,7 @@ var app = {
 	receivedEvent: function (id) {
 		var that = this;
 
-		that._db = new window.BrowerDataBaseClass({name: 'pass_store'});
-
+		that._db = new window.BrowserDataBaseClass({name: 'pass_store'});
 		if (!window.cordova) {
 			window.cordova = {};
 		}
@@ -62,13 +61,6 @@ var app = {
 							[2, 'All Categories'],
 							[3, 'Unknown']
 						])
-					})
-					.then(function () {
-						return that._db.insert(
-							'settings',
-							['id', 'type', 'data'],
-							[1, 'google', JSON.stringify({config : '', isHaveConfig : false})]
-						);
 					})
 					.then(function () {
 						that.runReact();

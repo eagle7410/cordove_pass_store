@@ -2,7 +2,7 @@ import {Auth} from '../const/Messages'
 import CryptoJS from 'crypto-js';
 
 /**
- * @type {BrowerDataBaseClass|*}
+ * @type {BrowserDataBaseClass|*}
  */
 const db = function () {
 	return window.cordova.db;

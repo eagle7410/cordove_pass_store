@@ -20,7 +20,7 @@ const stepsDownload  = (state = initialState, action) => {
 
 			return {
 				...state,
-				finished : true,
+				loading : false,
 				stop : true
 			};
 

@@ -2,18 +2,100 @@ import {save, move, update, reqFull, get} from '../utils/Req'
 import Routes from '../const/apiRoutes'
 import AlertStatus from '../const/AlertStatus'
 import {fullData} from './Loader'
+import FileSaver from 'file-saver'
 
 /**
- * @type {BrowerDataBaseClass|*}
+ * @type {BrowserDataBaseClass|*}
  */
 const db = function () {
 	return window.cordova.db;
 };
 
+const fileJson = 'data.json';
 
 const postArchive       = data => reqFull(save, Routes.cloudUploadArchive, data);
 
 const putCloudArchive   = data => reqFull(update, Routes.cloudUpload, data);
+
+const uploadBinary = async (state, binary) => {
+	let fileZip = fileJson + '.zip';
+	alert('before save');
+
+	if (window.resolveLocalFileSystemURL) {
+		alert('use resolveLocalFileSystemURL');
+		window.resolveLocalFileSystemURL(window.cordova.file.documentsDirectory,
+			function(dirEntry) {
+			/* global dir */
+				dir.getFile(fileZip, {
+						create: true,
+						exclusive: false
+					}, function (f) {
+						f.createWriter(function (writer) {
+								writer.onwriteend = function (evt) {
+									alert("File successfully created!");
+								};
+								writer.write(binary);
+							},
+							function (evt, where) {
+								console.log("Error writing file " + where + " :");
+								console.log(JSON.stringify(evt));
+							})
+					},
+					function (evt, where) {
+						console.log("Error resolving data folder " + where + " :");
+						console.log(JSON.stringify(evt));
+					}
+				)
+			}
+		);
+	} else {
+			let blob = new Blob([binary], {'type': 'application/octet-stream' });
+			let url = window.URL.createObjectURL(blob);
+
+		let a = document.createElement('a');
+		a.href = url;
+		a.download = fileZip;
+		a.click();
+		alert('GG');
+		// document.location = 'data:Application/octet-stream,' + encodeURIComponent(binary);
+	}
+
+	state.next();
+};
+
+const getDataJsonFile = async (state) => {
+	try {
+		/**
+		 * @type {BrowserDataBaseClass|*}
+		 */
+		let database = db();
+
+		let users = await database.getAll('users');
+		let store = await database.getAll('storage');
+		let categories = await database.getAll('categories');
+
+		let data = {
+			users : users,
+			store : store,
+			categories : categories
+		};
+
+		let zipper = new window.JSZip();
+
+		let zip = await zipper.file(fileJson, JSON.stringify(data));
+
+		let blob = await  zip.generateAsync({type:"blob"});
+		alert('COllect');
+		uploadBinary(state, blob);
+
+		state.next();
+
+	} catch (err) {
+		console.log('err ', err);
+		state.stop();
+		state.showAlert((err.message || (err.target && err.target.error.message ) || err), AlertStatus.BAD);
+	}
+}
 
 const updateApp   = async (state) => {
 	try {
@@ -28,14 +110,14 @@ const updateApp   = async (state) => {
 	} catch (err) {
 		console.log('err ', err);
 		state.stop();
-		state.showAlert('Fail load data file.', AlertStatus.BAD);
+		state.showAlert((err.message || (err.target && err.target.error.message ) || err), AlertStatus.BAD);
 	}
 };
 
 const migrateData = async (state, data) => {
 	try {
 		/**
-		 * @type {BrowerDataBaseClass|*}
+		 * @type {BrowserDataBaseClass|*}
 		 */
 		let database = db();
 
@@ -53,7 +135,7 @@ const migrateData = async (state, data) => {
 			let us = await database.getByRequire('users', 'login', user.login);
 
 			if (!us) {
-				await database.insert('storage', ['login', 'pass'], [user.login, user.pass])
+				await database.insert('users', ['login', 'pass'], [user.login, user.pass])
 			}
 
 		}
@@ -68,7 +150,7 @@ const migrateData = async (state, data) => {
 					rec[prop] = record[prop];
 				}
 
-				await database.updateByPk('storage', rec.id, record.title);
+				await database.updateByPk('storage', rec.id, rec);
 			} else {
 				await database.insert(
 					'storage',
@@ -92,16 +174,17 @@ const migrateData = async (state, data) => {
 	} catch (err) {
 		console.log('err ', err);
 		state.stop();
-		state.showAlert('Fail load data file.', AlertStatus.BAD);
+		state.showAlert((err.message || (err.target && err.target.error.message ) || err), AlertStatus.BAD);
 	}
 
 };
+
 const extractArchiveAndMigrate = async (state, binary) => {
 	try {
 		let zipper = new window.JSZip();
 
 		let zip = await zipper.loadAsync(binary);
-		let file = zip.file('data.json');
+		let file = zip.file(fileJson);
 
 		if (!file) {
 			throw new Error('Archive No have data.json file')
@@ -122,13 +205,14 @@ const extractArchiveAndMigrate = async (state, binary) => {
 	} catch (err) {
 		console.log('err ', err);
 		state.stop();
-		state.showAlert('Fail load data file.', AlertStatus.BAD);
+		state.showAlert((err.message || (err.target && err.target.error.message ) || err), AlertStatus.BAD);
 	}
 
 };
 
 export {
 	extractArchiveAndMigrate,
+	getDataJsonFile,
 	postArchive,
 	putCloudArchive,
 };

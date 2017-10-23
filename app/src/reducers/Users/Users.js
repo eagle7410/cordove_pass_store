@@ -5,6 +5,7 @@ const initialState = {
 	addName  : '',
 	addPass  : '',
 	onEdit   : false,
+	isOpenAddingTools : false
 };
 
 const users = (state = initialState, action) => {
@@ -12,6 +13,16 @@ const users = (state = initialState, action) => {
 
 	// eslint-disable-next-line
 	switch (action.type) {
+		case Users.addingToolsOpen:
+			return {
+				...state,
+				isOpenAddingTools : true
+			};
+		case Users.addingToolsClose:
+			return {
+				...state,
+				isOpenAddingTools : false
+			};
 		case Users.init:
 			return {
 				...state,

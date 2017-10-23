@@ -12,7 +12,7 @@ const StorageTable = (state) => {
 	let filters = state.filters;
 	let pagination = state.pagination;
 	let filterCategory = filters.categorySelect;
-	let filterCheckText = (data) => data.toLowerCase().indexOf(filters.searchText);
+	let filterCheckText = (data) => (data || '').toLowerCase().indexOf(filters.searchText);
 	let rows = store.data.filter((row, inx) => !(
 		(filterCategory !== filters.categoryAll && row.category !== filterCategory) ||
 		(

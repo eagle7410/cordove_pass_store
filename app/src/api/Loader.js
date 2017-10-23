@@ -1,5 +1,5 @@
 /**
- * @type {BrowerDataBaseClass|*}
+ * @type {BrowserDataBaseClass|*}
  */
 
 const fullData = async () => {

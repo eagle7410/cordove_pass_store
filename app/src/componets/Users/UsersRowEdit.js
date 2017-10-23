@@ -17,7 +17,7 @@ const UsersRowEdit = (state) => {
 			login :store.editName
 		}).then(
 			r => state.onSaveEdit(state.id),
-			e => state.showAlert(e, AlertStatus.BAD)
+			e => state.showAlert(e.message || e, AlertStatus.BAD)
 		);
 	};
 
