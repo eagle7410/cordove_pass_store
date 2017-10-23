@@ -76,11 +76,14 @@ const getDataJsonFile = async (state) => {
 		let users = await database.getAll('users');
 		let store = await database.getAll('storage');
 		let categories = await database.getAll('categories');
+		let catObj = {};
+
+		categories.map(cat => catObj[cat.id] = cat.name);
 
 		let data = {
 			users : users,
 			store : store,
-			categories : categories
+			categories : catObj
 		};
 
 		let zipper = new window.JSZip();

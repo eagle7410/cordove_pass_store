@@ -27,7 +27,8 @@ const del  = async id => {
 };
 
 const edit = async (id, name) => {
-	await db().updateByPk(table, Number(id), {id : id, name : name});
+	id = Number(id);
+	await db().updateByPk(table, id, {id : id, name : name});
 	return true;
 };
 
