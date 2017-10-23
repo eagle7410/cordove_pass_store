@@ -18,23 +18,11 @@ const StepsUpload = (state) => {
 	const loading = store.loading;
 
 	const handelRun = () => {
-		alert('run');
 		state.reset();
-		state.run();
 
 		getDataJsonFile(state);
 
-		// postArchive()
-		// 	.then(date => {
-		// 		state.next(typeData);
-		// 		return putCloudArchive({...typeData, date : date});
-		// 	})
-		// 	.then(() => state.next(typeData))
-		// 	.catch(err => {
-		// 		state.stop(typeData);
-		// 		console.log('Error create archive', err);
-		// 		state.showAlert('Bad upload', AlertStatus.BAD)
-		// 	});
+		state.run();
 	};
 
 	const actionDisable = loading;

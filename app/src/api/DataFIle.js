@@ -1,8 +1,7 @@
-import {save, move, update, reqFull, get} from '../utils/Req'
+import {save, update, reqFull} from '../utils/Req'
 import Routes from '../const/apiRoutes'
 import AlertStatus from '../const/AlertStatus'
 import {fullData} from './Loader'
-import FileSaver from 'file-saver'
 
 /**
  * @type {BrowserDataBaseClass|*}
@@ -19,33 +18,38 @@ const putCloudArchive   = data => reqFull(update, Routes.cloudUpload, data);
 
 const uploadBinary = async (state, binary) => {
 	let fileZip = fileJson + '.zip';
-	alert('before save');
 
 	if (window.resolveLocalFileSystemURL) {
-		alert('use resolveLocalFileSystemURL');
-		window.resolveLocalFileSystemURL(window.cordova.file.documentsDirectory,
+		function writeFile(fileEntry, dataObj) {
+			// Create a FileWriter object for our FileEntry (log.txt).
+			fileEntry.createWriter(function (fileWriter) {
+
+				fileWriter.onwriteend = function() {
+					state.next();
+					state.showAlert("File write to: " +fileEntry.fullPath, AlertStatus.OK);
+				};
+
+				fileWriter.onerror = function (e) {
+					state.stop();
+					state.showAlert("Failed file write: " + e.toString(), AlertStatus.BAD);
+				};
+
+				// If data object is not passed in,
+				// create a new Blob instead.
+				if (!dataObj) {
+					dataObj = new Blob(['some file data'], { type: 'text/plain' });
+				}
+
+				fileWriter.write(dataObj);
+			});
+		}
+
+		let filePaths = window.cordova.file;
+		window.resolveLocalFileSystemURL( (filePaths.documentsDirectory || filePaths.externalRootDirectory),
 			function(dirEntry) {
-			/* global dir */
-				dir.getFile(fileZip, {
-						create: true,
-						exclusive: false
-					}, function (f) {
-						f.createWriter(function (writer) {
-								writer.onwriteend = function (evt) {
-									alert("File successfully created!");
-								};
-								writer.write(binary);
-							},
-							function (evt, where) {
-								console.log("Error writing file " + where + " :");
-								console.log(JSON.stringify(evt));
-							})
-					},
-					function (evt, where) {
-						console.log("Error resolving data folder " + where + " :");
-						console.log(JSON.stringify(evt));
-					}
-				)
+				dirEntry.getFile(fileZip, { create: true, exclusive: false }, function (fileEntry) {
+					writeFile(fileEntry, binary);
+				})
 			}
 		);
 	} else {
@@ -56,11 +60,10 @@ const uploadBinary = async (state, binary) => {
 		a.href = url;
 		a.download = fileZip;
 		a.click();
-		alert('GG');
-		// document.location = 'data:Application/octet-stream,' + encodeURIComponent(binary);
+		state.next();
 	}
 
-	state.next();
+
 };
 
 const getDataJsonFile = async (state) => {
@@ -85,7 +88,7 @@ const getDataJsonFile = async (state) => {
 		let zip = await zipper.file(fileJson, JSON.stringify(data));
 
 		let blob = await  zip.generateAsync({type:"blob"});
-		alert('COllect');
+
 		uploadBinary(state, blob);
 
 		state.next();
