@@ -39,7 +39,7 @@ const StoreTools = (state) => {
 					</IconButton>
 					{
 						filters.showSearchText
-							? <TextField id='inputSearch' hintText='Enter for search' onChange ={state.changeSearchText}/>
+							? <TextField id='inputSearch' hintText='Enter for search' style={{maxWidth : 200}} onChange ={state.changeSearchText}/>
 							: <span/>
 					}
 					<ToolbarSeparator />

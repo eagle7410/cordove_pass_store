@@ -1,26 +1,26 @@
 {
-    "name": "com.example.hello",
-    "version": "0.0.1",
-    "displayName": "HelloWorld",
-    "cordova": {
-        "platforms": [
-            "android",
-            "browser",
-            "ios"
-        ]
-    },
-    "dependencies": {
-        "cordova-android": "^6.3.0",
-        "cordova-browser": "^4.1.0",
-        "cordova-ios": "^4.4.0",
-        "cordova-plugin-compat": "^1.2.0",
-        "cordova-plugin-file": "^4.3.3",
-        "cordova-plugin-file-transfer": "^1.6.3",
-        "crypto-js": "3.1.9-1",
-        "ios-sim": "^6.1.2"
-    },
-    "devDependencies": {
-        "fs-extra": "4.0.2",
-        "node-cmd": "3.0.0"
-    }
+  "name": "com.example.hello",
+  "version": "0.0.1",
+  "displayName": "HelloWorld",
+  "cordova": {
+    "platforms": [
+      "android",
+      "browser",
+      "ios"
+    ]
+  },
+  "dependencies": {
+    "cordova-android": "^6.3.0",
+    "cordova-browser": "^4.1.0",
+    "cordova-ios": "^4.4.0",
+    "cordova-plugin-compat": "^1.2.0",
+    "cordova-plugin-file": "^4.3.3",
+    "cordova-plugin-file-transfer": "^1.6.3",
+    "crypto-js": "3.1.9-1",
+    "ios-sim": "^6.1.2"
+  },
+  "devDependencies": {
+    "fs-extra": "4.0.2",
+    "node-cmd": "3.0.0"
+  }
 }
