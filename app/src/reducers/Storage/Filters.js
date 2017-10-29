@@ -5,6 +5,7 @@ const initialState = {
 	categoryAll       : 2,
 	searchText        : '',
 	showSearchText    : false,
+	isOpenTools       : false,
 	searchIcoActive   : '#F44336',
 	searchIcoInactive : '#FFA726',
 	searchIcoNow      : '#FFA726',
@@ -14,6 +15,16 @@ const storageFilters = (state = initialState, action) => {
 
 	// eslint-disable-next-line
 	switch (action.type) {
+		case StorageFilters.toolsOpen:
+			return {
+				...state,
+				isOpenTools: true
+			};
+		case StorageFilters.toolsClose:
+			return {
+				...state,
+				isOpenTools: false
+			};
 		case StorageFilters.chCat:
 			return {
 				...state,
