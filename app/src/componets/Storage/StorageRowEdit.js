@@ -37,9 +37,12 @@ const StorageRowEdit = (state) => {
 					<span style={styleLabel}>Login    :</span> <TextField id={`edtL_${id}`} value={row.login} onChange={ev => state.onEditText('login', ev.target.value)}/> <br/>
 					<span style={styleLabel}>Pass     :</span> <TextField id={`edtP_${id}`} value={row.pass} onChange={ev => state.onEditText('pass', ev.target.value)}/> <br/>
 					<span style={styleLabel}>Answer   :</span> <TextField id={`edtA_${id}`} value={row.answer} onChange={ev => state.onEditText('answer', ev.target.value)}/>
+					<div>
+						<span style={styleLabel}>Description:</span><br/>
+						<textarea  rows='4' style={styleArea} value={row.desc} onChange={state.onEditDesc}/>
+					</div>
 				</div>
 			 </TableRowColumn>
-			<TableRowColumn children={<textarea  style={styleArea} rows='10' defaultValue={row.desc} />} onChange={state.onEditDesc}/>
 		</TableRow>
 	);
 };

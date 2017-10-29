@@ -22,6 +22,18 @@ const StorageRowShow = (state) => {
 		));
 	};
 
+	const showDesc = (row) => {
+		if (!row.desc || !row.desc.length)
+			return '';
+
+		return (
+			<div>
+				<span style={styleDataLabel}>Description:</span><br/>
+				<textarea  rows='4' style={styleArea} readOnly={true} defaultValue={row.desc} />
+			</div>
+		);
+	}
+
 	return (
 		<TableRow >
 			<TableRowColumn style={styleRow}>
@@ -37,11 +49,9 @@ const StorageRowShow = (state) => {
 					<span style={styleDataLabel}>Login    :</span> {row.login} <br/>
 					<span style={styleDataLabel}>Pass     :</span> {row.pass} <br/>
 					<span style={styleDataLabel}>Answer   :</span> {row.answer}
+					{showDesc(row)}
 				</div>
 			 </TableRowColumn>
-			<TableRowColumn
-				children={<textarea  rows='4' style={styleArea} readOnly={true} defaultValue={row.desc}/>} onChange={state.onEditDesc}
-			/>
 		</TableRow>
 	);
 };
