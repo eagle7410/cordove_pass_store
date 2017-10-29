@@ -23,10 +23,12 @@ const StorageTable = (state) => {
 		)
 	));
 
-	let total = Math.ceil(rows.length / pagination.split);
-	let startIndex = (pagination.number -1 ) * pagination.split;
+	let countInPage = isNaN(pagination.split) ? 1 : pagination.split;
 
-	rows = rows.slice(startIndex, startIndex + pagination.split);
+	let total = Math.ceil(rows.length / countInPage);
+	let startIndex = (pagination.number -1 ) * countInPage;
+
+	rows = rows.slice(startIndex, startIndex + countInPage);
 
 	return (
 		<Table fixedHeader={true} selectable={false}>

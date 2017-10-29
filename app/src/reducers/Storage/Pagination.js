@@ -16,6 +16,7 @@ const storagePagination = (state = initialState, action) => {
 			};
 
 		case Storage.changeCountInPage:
+
 			return {
 				...state,
 				split : action.data

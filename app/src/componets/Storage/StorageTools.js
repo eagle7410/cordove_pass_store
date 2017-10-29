@@ -10,12 +10,6 @@ import {StorageFilters, Storage} from '../../const/Events'
 const StoreTools = (state) => {
 	let filters = state.filters;
 	const changeCountInPage = (ev, val) => {
-		val = Number(val);
-
-		if (isNaN(val) || val === 0) {
-			return;
-		}
-
 		state.changeCountInPage(val);
 	}
 
