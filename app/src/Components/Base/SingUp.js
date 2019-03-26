@@ -1,166 +1,198 @@
-import React from 'react';
-import {connect} from 'react-redux';
+import React from 'react'
+import {connect} from 'react-redux'
 import {
 	PREFIX_ALERT as ALERT
 } from '../../const/prefix'
 
-//MD
-import Button from '@material-ui/core/Button';
-import ApplyIco from '@material-ui/icons/LockOpen';
-import {PREFIX_ACCOUNT as PREFIX} from "../../const/prefix";
-import withStyles from "@material-ui/core/styles/withStyles";
-import InputLabel from "@material-ui/core/InputLabel";
-import Input from "@material-ui/core/Input";
-import InputAdornment from '@material-ui/core/InputAdornment';
-import Visibility from '@material-ui/icons/Visibility';
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
-import IconButton from '@material-ui/core/IconButton';
-import FormControl from "@material-ui/core/FormControl";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import Paper from "@material-ui/core/Paper";
-import CircularProgress from '@material-ui/core/CircularProgress';
-import classNames from 'classnames';
-
+// MD
+import Button from '@material-ui/core/Button'
+import ApplyIco from '@material-ui/icons/LockOpen'
+import {PREFIX_ACCOUNT as PREFIX} from '../../const/prefix'
+import withStyles from '@material-ui/core/styles/withStyles'
+import InputLabel from '@material-ui/core/InputLabel'
+import Input from '@material-ui/core/Input'
+import InputAdornment from '@material-ui/core/InputAdornment'
+import Visibility from '@material-ui/icons/Visibility'
+import VisibilityOff from '@material-ui/icons/VisibilityOff'
+import IconButton from '@material-ui/core/IconButton'
+import FormControl from '@material-ui/core/FormControl'
+import CssBaseline from '@material-ui/core/CssBaseline'
+import Paper from '@material-ui/core/Paper'
+import CircularProgress from '@material-ui/core/CircularProgress'
+import classNames from 'classnames'
+import {
+	Firebase
+} from '../../Api'
 const SingUp = (state) => {
-	const { classes } = state;
-	const {
+  const { classes } = state
+  const {
 		newCredentials
-	} = state.store;
+	} = state.store
 
-	const {
-		label,
+  const {
+		email,
+		password,
 		isShowConfig,
+		isShowPassword,
 		config,
 		isLoad
-	} = newCredentials;
+	} = newCredentials
 
-	const loadIndicator = isLoad ? <CircularProgress size={24} /> : <span />;
+  const loadIndicator = isLoad ? <CircularProgress size={24} /> : <span />
 
-	const handlerLoadConfig = ($ev)=> {
+  const handlerLoadConfig = async ($ev) => {
+    state.configLoadRun()
 
+    try {
+      if (!email.length) {
+        return state.showError('Email is required')
+      }
 
-		state.configLoadRun();
+      if (!password.length) {
+        return state.showError('Password is required')
+      }
 
-		try {
-			if (!label.length) {
-				return state.showError('Label is required')
-			}
+      if (!config.length) {
+        return state.showError('Credentials is required')
+      }
 
-			// TODO: Back check unique label
+      let credentials = {}
 
-			if (!config.length) {
-				return state.showError('Credentials is required')
-			}
+      try {
+        const {apiKey, authDomain, databaseURL, projectId, storageBucket, messagingSenderId} = JSON.parse(config)
+        credentials = {apiKey, authDomain, databaseURL, projectId, storageBucket, messagingSenderId}
+      } catch (e) {
+        return state.showError(`Error parse config: ${e.message || e}`)
+      }
 
-			try {
-				const {apiKey, authDomain, databaseURL, projectId, storageBucket, messagingSenderId} = JSON.parse(config);
-				const credentials = {apiKey, authDomain, databaseURL, projectId, storageBucket, messagingSenderId};
+      for (let prop of Object.values(credentials)) if (!prop) return state.showError('Credentials is invalid')
+      const user = await Firebase.authUser(credentials, email, password)
 
-				for (let prop of Object.values(credentials)) if (!prop) return state.showError('Credentials is invalid')
-
-			} catch (e) {
-				return state.showError(`Error parse config: ${e.message || e}`)
-			}
+      if (!user) throw new Error('User not found')
 
 			// TODO: Back The end work day.
 
-			state.showOk('Success ...');
-		} finally {
-			state.configLoadStop();
-		}
-	};
+      state.showOk('Success ...')
+    } catch (e) {
+      state.showError(`Error load config: ${e.message || e}`)
+    } finally {
+      state.configLoadStop()
+    }
+  }
 
-	return (
-		<main className={classes.main}>
-			<CssBaseline/>
-			<Paper className={classes.paper}>
+  return (
+    <main className={classes.main}>
+      <CssBaseline />
+      <Paper className={classes.paper}>
 
-				<FormControl margin="normal" required fullWidth>
-					<InputLabel htmlFor="label">Label</InputLabel>
-					<Input id="label" name="label" autoFocus
-					       value={label}
-					       onChange={event => state.changeLabel(event.target.value)}
+        <FormControl margin='normal' required fullWidth>
+          <InputLabel htmlFor='email'>Email</InputLabel>
+          <Input id='email' name='email' autoFocus
+            value={email}
+            onChange={event => state.changeEmail(event.target.value)}
 					/>
-				</FormControl>
+        </FormControl>
 
-				<FormControl className={classNames(classes.margin, classes.textField)} fullWidth>
-					<InputLabel htmlFor="adornment-config">Credentials</InputLabel>
-					<Input
-						id="adornment-config"
-						type={isShowConfig ? 'text' : 'password'}
-						value={config}
-						onChange={event => state.changeConfig(event.target.value)}
-						endAdornment={
-							<InputAdornment position="end">
-								<IconButton
-									aria-label="Toggle config visibility"
-									onClick={state.toggleShowConfig}
+        <FormControl className={classNames(classes.margin, classes.textField)} fullWidth>
+          <InputLabel htmlFor='adornment-password'>Password</InputLabel>
+          <Input
+            id='adornment-password'
+            type={isShowPassword ? 'text' : 'password'}
+            value={password}
+            onChange={event => state.changePassword(event.target.value)}
+            endAdornment={
+              <InputAdornment position='end'>
+                <IconButton
+                  aria-label='Toggle password visibility'
+                  onClick={state.toggleShowPassword}
 								>
-									{isShowConfig ? <Visibility /> : <VisibilityOff />}
-								</IconButton>
-							</InputAdornment>
+                  {isShowPassword ? <Visibility /> : <VisibilityOff />}
+                </IconButton>
+              </InputAdornment>
 						}
 					/>
-			</FormControl>
+        </FormControl>
 
-				<FormControl margin="normal" fullWidth>
-					<Button variant="contained" color="primary"
-					        onClick={handlerLoadConfig}
-					        className={classes.button}
-					        disabled={!label.length || !config.length || isLoad}
-					        fullWidth
+        <FormControl className={classNames(classes.margin, classes.textField)} fullWidth>
+          <InputLabel htmlFor='adornment-config'>Credentials</InputLabel>
+          <Input
+            id='adornment-config'
+            type={isShowConfig ? 'text' : 'password'}
+            value={config}
+            onChange={event => state.changeConfig(event.target.value)}
+            endAdornment={
+              <InputAdornment position='end'>
+                <IconButton
+                  aria-label='Toggle config visibility'
+                  onClick={state.toggleShowConfig}
+								>
+                  {isShowConfig ? <Visibility /> : <VisibilityOff />}
+                </IconButton>
+              </InputAdornment>
+						}
+					/>
+        </FormControl>
+
+        <FormControl margin='normal' fullWidth>
+          <Button variant='contained' color='primary'
+            onClick={handlerLoadConfig}
+            className={classes.button}
+            disabled={!email.length || !config.length || !password.length || isLoad}
+            fullWidth
 					>
 						Apply
 						<ApplyIco className={classes.extendedIcon} />
-						{loadIndicator}
-					</Button>
-				</FormControl>
-			</Paper>
-		</main>
-	);
-};
+            {loadIndicator}
+          </Button>
+        </FormControl>
+      </Paper>
+    </main>
+  )
+}
 
 const styles = theme => ({
-	main: {
-		width: 'auto',
-		display: 'block', // Fix IE 11 issue.
-		marginLeft: theme.spacing.unit * 3,
-		marginRight: theme.spacing.unit * 3,
-		[theme.breakpoints.up(400 + theme.spacing.unit * 3 * 2)]: {
-			width: 360,
-			marginLeft: 'auto',
-			marginRight: 'auto',
-		},
-	},
-	paper: {
-		marginTop: theme.spacing.unit * 8,
-		display: 'flex',
-		flexDirection: 'column',
-		alignItems: 'center',
-		padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme.spacing.unit * 3}px`,
-	},
-	button: {
-		margin: theme.spacing.unit,
-	},
-	extendedIcon: {
-		margin: theme.spacing.unit,
-	},
-	input: {
-		display: 'none',
-	},
-});
+  main: {
+    width: 'auto',
+    display: 'block', // Fix IE 11 issue.
+    marginLeft: theme.spacing.unit * 3,
+    marginRight: theme.spacing.unit * 3,
+    [theme.breakpoints.up(400 + theme.spacing.unit * 3 * 2)]: {
+      width: 360,
+      marginLeft: 'auto',
+      marginRight: 'auto'
+    }
+  },
+  paper: {
+    marginTop: theme.spacing.unit * 8,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme.spacing.unit * 3}px`
+  },
+  button: {
+    margin: theme.spacing.unit
+  },
+  extendedIcon: {
+    margin: theme.spacing.unit
+  },
+  input: {
+    display: 'none'
+  }
+})
 
 export default connect(
 	state => ({
-		store : state.Account
-	}),
+  store: state.Account
+}),
 	dispatch => ({
-		changeLabel  : (value) => dispatch({type : `${PREFIX}ChangeLabel`, value}),
-		changeConfig : (value) => dispatch({type : `${PREFIX}ChangeConfig`, value}),
-		toggleShowConfig : ()  => dispatch({type : `${PREFIX}ToggleShowConfig`}),
-		configLoadRun : ()     => dispatch({type : `${PREFIX}ConfigLoadRun`}),
-		configLoadStop : ()    => dispatch({type : `${PREFIX}ConfigLoadStop`}),
-		showError : (message)  => dispatch({type : `${ALERT}OpenError`, message}),
-		showOk    : (message)  => dispatch({type : `${ALERT}OpenOk`, message}),
-	})
+  changeEmail: (value) => dispatch({type: `${PREFIX}ChangeEmail`, value}),
+  changePassword: (value) => dispatch({type: `${PREFIX}ChangePassword`, value}),
+  changeConfig: (value) => dispatch({type: `${PREFIX}ChangeConfig`, value}),
+  toggleShowConfig: () => dispatch({type: `${PREFIX}ToggleShowConfig`}),
+  toggleShowPassword: () => dispatch({type: `${PREFIX}ToggleShowPassword`}),
+  configLoadRun: () => dispatch({type: `${PREFIX}ConfigLoadRun`}),
+  configLoadStop: () => dispatch({type: `${PREFIX}ConfigLoadStop`}),
+  showError: (message) => dispatch({type: `${ALERT}OpenError`, message}),
+  showOk: (message) => dispatch({type: `${ALERT}OpenOk`, message})
+})
 )(withStyles(styles)(SingUp))
