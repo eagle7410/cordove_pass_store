@@ -1,39 +1,19 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './App';
+import {render} from 'react-dom';
+import {Router} from 'react-router-dom';
 import './index.css';
+import App from './App';
+
 import {Provider} from 'react-redux';
-import {createStore, applyMiddleware} from 'redux';
-import {composeWithDevTools} from 'redux-devtools-extension';
-import { HashRouter as Router } from 'react-router-dom';
-import { routerMiddleware, syncHistoryWithStore } from 'react-router-redux';
-import { createHashHistory as createHistory } from 'history';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import {ListeningRouter} from './componets/tools/ListeningRouter';
-import {reducer} from './reducers';
-const browserHistory = createHistory();
-const middleware = routerMiddleware(browserHistory);
+import {history, store} from './store';
 
-const store = createStore(reducer, composeWithDevTools(applyMiddleware(middleware)));
-const history = syncHistoryWithStore(browserHistory, store);
+render(
+	<Router history={history}>
+		<Provider store={store}>
+			<App/>
+		</Provider>
+	</Router>
+	,
+	document.getElementById('root')
+);
 
-const appReact = () => {
-	ReactDOM.render(
-		<Router history={history}>
-			<Provider store={store}>
-				<ListeningRouter>
-					<MuiThemeProvider>
-						<App/>
-					</MuiThemeProvider>
-				</ListeningRouter>
-			</Provider>
-		</Router>,
-		document.getElementById('root')
-	);
-};
-
-if (!window.cordova) {
-	window.appReact = appReact;
-} else {
-	window.cordova.appReact = appReact;
-}
