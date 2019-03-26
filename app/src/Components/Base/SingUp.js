@@ -1,5 +1,8 @@
 import React from 'react';
 import {connect} from 'react-redux';
+import {
+	PREFIX_ALERT as ALERT
+} from '../../const/prefix'
 
 //MD
 import Button from '@material-ui/core/Button';
@@ -34,9 +37,35 @@ const SingUp = (state) => {
 	const loadIndicator = isLoad ? <CircularProgress size={24} /> : <span />;
 
 	const handlerLoadConfig = ($ev)=> {
-		if (!label.length) return false;
-		alert('RUN LOAD');
+
+
 		state.configLoadRun();
+
+		try {
+			if (!label.length) {
+				return state.showError('Label is required')
+			}
+
+			// TODO: Back check unique label
+
+			if (!config.length) {
+				return state.showError('Credentials is required')
+			}
+
+			try {
+				const {apiKey, authDomain, databaseURL, projectId, storageBucket, messagingSenderId} = JSON.parse(config);
+				const credentials = {apiKey, authDomain, databaseURL, projectId, storageBucket, messagingSenderId};
+
+				for (let prop of Object.values(credentials)) if (!prop) return state.showError('Credentials is invalid')
+
+			} catch (e) {
+				return state.showError(`Error parse config: ${e.message || e}`)
+			}
+
+			state.showOk('Success ...');
+		} finally {
+			state.configLoadStop();
+		}
 	};
 
 	return (
@@ -129,5 +158,7 @@ export default connect(
 		toggleShowConfig : ()  => dispatch({type : `${PREFIX}ToggleShowConfig`}),
 		configLoadRun : ()     => dispatch({type : `${PREFIX}ConfigLoadRun`}),
 		configLoadStop : ()    => dispatch({type : `${PREFIX}ConfigLoadStop`}),
+		showError : (message)  => dispatch({type : `${ALERT}OpenError`, message}),
+		showOk    : (message)  => dispatch({type : `${ALERT}OpenOk`, message}),
 	})
 )(withStyles(styles)(SingUp))

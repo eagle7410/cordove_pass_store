@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 import {Route, Switch} from 'react-router-dom';
+import Alert from './Components/Alert'
+
 import {
 	Base,
 	DataList
@@ -15,6 +17,7 @@ class App extends Component {
 						<Route path="/data-list" component={DataList}/>
 					</Switch>
 				</header>
+				<Alert/>
 			</div>
 		);
 	}
