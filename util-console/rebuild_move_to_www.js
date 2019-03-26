@@ -42,9 +42,9 @@ const correctIndex = async () => {
 			if (!res) return write(data);
 
 			write(data = data
-					.replace(/\/css\//g, 'css/')
-					.replace(/\<script type=\"text\/javascript" src="\/js\/main\.(.*)\/script\>/, '')
-					.replace(/\<meta name=\"description\" content=\"cordavaJs\"\>/, `<script type="text/javascript" src="cordova.js"></script><script type="text/javascript" src="js/main.${res[1]}.js"></script>`)
+				.replace(/\/css\//g, 'css/')
+				.replace(/\<script type=\"text\/javascript" src="\/js\/main\.(.*)\/script\>/, '')
+				.replace(/\<meta name=\"description\" content=\"cordavaJs\"\>/, `<script type="text/javascript" src="cordova.js"></script><script type="text/javascript" src="js/main.${res[1]}.js"></script>`)
 			);
 
 		}

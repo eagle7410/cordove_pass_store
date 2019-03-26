@@ -1,5 +1,5 @@
 import {
-	PREFIX_MENU_LEFT as PREFIX
+	PREFIX_MENU_LEFT as PREFIX,
 } from '../const/prefix'
 
 const initialState = {

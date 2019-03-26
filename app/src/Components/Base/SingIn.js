@@ -2,12 +2,13 @@ import React from 'react';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import Paper from '@material-ui/core/Paper';
 import withStyles from '@material-ui/core/styles/withStyles';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import Select from '@material-ui/core/Select';
 
 const styles = theme => ({
 	main: {
@@ -40,23 +41,28 @@ const styles = theme => ({
 const SignIn = (state) => {
 	const {classes} = state;
 
+	const handlerChange = ($ev) => {
+		// TODO: Back
+	}
+
 	return (
 		<main className={classes.main}>
 			<CssBaseline/>
 			<Paper className={classes.paper}>
 				<form className={classes.form}>
-					<FormControl margin="normal" required fullWidth>
-						<InputLabel htmlFor="email">Email Address</InputLabel>
-						<Input id="email" name="email" autoComplete="email" autoFocus/>
+					<FormControl className={classes.formControl} fullWidth>
+						<InputLabel htmlFor="credentials-helper">Credential</InputLabel>
+						<Select
+							value={""}
+							onChange={handlerChange}
+							input={<Input name="credentials" id="credentials-helper" />}
+						>
+							<MenuItem value="">
+								<em>None</em>
+							</MenuItem>
+						</Select>
+						<FormHelperText>Select you credentials by label</FormHelperText>
 					</FormControl>
-					<FormControl margin="normal" required fullWidth>
-						<InputLabel htmlFor="password">Password</InputLabel>
-						<Input name="password" type="password" id="password" autoComplete="current-password"/>
-					</FormControl>
-					<FormControlLabel
-						control={<Checkbox value="remember" color="primary"/>}
-						label="Remember me"
-					/>
 					<Button
 						type="submit"
 						fullWidth
@@ -70,6 +76,6 @@ const SignIn = (state) => {
 			</Paper>
 		</main>
 	);
-}
+};
 
 export default withStyles(styles)(SignIn);
