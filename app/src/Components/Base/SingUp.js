@@ -62,6 +62,8 @@ const SingUp = (state) => {
 				return state.showError(`Error parse config: ${e.message || e}`)
 			}
 
+			// TODO: Back The end work day.
+
 			state.showOk('Success ...');
 		} finally {
 			state.configLoadStop();
