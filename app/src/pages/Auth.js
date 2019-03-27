@@ -10,13 +10,13 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 //My comps
-import SingIn from '../Components/Base/SingIn'
-import SingUp from '../Components/Base/SingUp'
+import SingIn from '../Components/Auth/SingIn'
+import SingUp from '../Components/Auth/SingUp'
 
 //CONST
 import {PREFIX_ACCOUNT as PREFIX} from '../const/prefix'
 
-const Base = (state) => {
+const Auth = (state) => {
 	const {classes} = state;
 	const {
 		accountActiveTab:activeTab
@@ -91,4 +91,4 @@ export default connect(
 	dispatch => ({
 		changeTab : ($ev, value) => dispatch({type : `${PREFIX}ChangeTab`, value}),
 	})
-)(withStyles(styles)(Base))
+)(withStyles(styles)(Auth))

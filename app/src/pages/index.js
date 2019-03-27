@@ -1,7 +1,9 @@
-import Base from './Base'
+import Auth from './Auth'
 import DataList from './DataList'
+import Categories from './Categories'
 
 export {
-	Base,
-	DataList
+	Auth,
+	DataList,
+	Categories
 }

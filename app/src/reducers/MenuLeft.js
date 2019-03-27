@@ -10,13 +10,13 @@ const initialState = {
 const MenuLeft = (state = initialState, action) => {
 	// eslint-disable-next-line
 	switch (action.type) {
-		case `${PREFIX}_OPEN`:
+		case `${PREFIX}Open`:
 			return {
 				...state,
 				open : true
 			};
 
-		case `${PREFIX}_CLOSE`:
+		case `${PREFIX}Close`:
 			return {
 				...state,
 				open : false
