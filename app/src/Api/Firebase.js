@@ -2,19 +2,48 @@ import * as firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/database'
 
-let app
+let app;
+
 class Firebase {
 
-  static authUser (config, email, password) {
-    console.log(config, email, password)
-    app = firebase.initializeApp(config)
-    return new Promise((ok, bad) => {
-      app.auth().signInWithEmailAndPassword(email, password).catch(function (error) {
-        if (error) return bad(`Error code: ${error.code}, message: ${error.message}`)
-      })
-      app.auth().onAuthStateChanged(ok)
-    })
-  }
+	static isErrorAboutDuplicationApp(e) {
+		return e && e.code && e.code === 'app/duplicate-app';
+	}
+
+	static authUser(config, email, password) {
+		return new Promise((ok, bad) => {
+			try {
+				app = firebase.initializeApp(config)
+			} catch (e) {
+				if (!this.isErrorAboutDuplicationApp(e))
+					return bad(e);
+			}
+
+			app.auth().signInWithEmailAndPassword(email, password).catch(function (error) {
+				if (error) return bad(`Error code: ${error.code}, message: ${error.message}`)
+			});
+
+			app.auth().onAuthStateChanged(ok)
+		})
+	}
+
+	static async getCollection(name) {
+		const query = app.database().ref(name);
+
+		const snap = await query.once('value');
+
+		return snap.val();
+	}
+
+	static async getData() {
+		const store = await this.getCollection('store');
+		const categories = await this.getCollection('categories');
+
+		return {
+			store,
+			categories
+		};
+	}
 }
 
 export default Firebase

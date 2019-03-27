@@ -8,6 +8,10 @@ import Header from './Header'
 import MenuLeft from './MenuLeft'
 
 class Layout extends Component {
+	componentDidMount() {
+
+	}
+
 	render() {
 		const { classes } = this.props;
 

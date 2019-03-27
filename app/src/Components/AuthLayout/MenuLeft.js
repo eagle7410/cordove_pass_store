@@ -2,6 +2,10 @@ import React from 'react';
 import {connect} from 'react-redux';
 import classNames from 'classnames';
 import {PREFIX_MENU_LEFT as PREFIX} from "../../const/prefix";
+import {
+	PathCategories,
+	PathDataList
+} from "../../const/path";
 import {withStyles} from "@material-ui/core";
 import {classes} from "../../const/styles";
 import Drawer from '@material-ui/core/Drawer';
@@ -35,10 +39,10 @@ const MenuMain = (state) => {
 			</div>
 			<Divider />
 			<List>
-				<MenuLeftItem label={'Data list'} path={'/data-list'}>
+				<MenuLeftItem label={'Data list'} path={PathDataList}>
 					<StorageIcon />
 				</MenuLeftItem>
-				<MenuLeftItem label={'Categories'} path={'/categories'}>
+				<MenuLeftItem label={'Categories'} path={PathCategories}>
 					<CategoriesIcon />
 				</MenuLeftItem>
 			</List>

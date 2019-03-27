@@ -1,29 +1,40 @@
 import {PREFIX_ACCOUNT as PREFIX} from '../const/prefix'
 
+const initialCredentials = {
+	isShowConfig: false,
+	isShowPassword: false,
+	isLoad: false,
+	email: '',
+	password: '',
+	config: ''
+};
+
 const initialState = {
 	isAuth: false,
-	accountActiveTab: 1,
+	accountActiveTab: 0,
 	credentials: [],
-	newCredentials: {
-		isShowConfig: false,
-		isShowPassword: false,
-		isLoad: false,
-		email: '',
-		password: '',
-		config: ''
-	}
+	newCredentials: {...initialCredentials}
 };
 
 const Account = (state = initialState, action) => {
 	// eslint-disable-next-line
 	switch (action.type) {
-		case `${PREFIX}ConfigLoadStop`:
+		case `${PREFIX}Init`:
 			return {
 				...state,
-				newCredentials: {
-					...state.newCredentials,
-					isLoad: false
-				}
+				isAuth: false,
+			};
+		case `${PREFIX}SetCredential`:
+			return {
+				...state,
+				credentials: action.data || [],
+			};
+		case `${PREFIX}AddCredential`:
+			return {
+				...state,
+				newCredentials: {...initialCredentials},
+				credentials: state.credentials.concat([action.data]),
+				isAuth: true
 			};
 		case `${PREFIX}ConfigLoadRun`:
 			return {
@@ -48,7 +59,7 @@ const Account = (state = initialState, action) => {
 					...state.newCredentials,
 					isShowConfig: !state.newCredentials.isShowConfig
 				}
-			}
+			};
 		case `${PREFIX}ChangeConfig`:
 			return {
 				...state,
@@ -80,7 +91,7 @@ const Account = (state = initialState, action) => {
 			};
 	}
 
-	return state
-}
+	return state;
+};
 
 export {Account}
