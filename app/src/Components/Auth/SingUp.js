@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {withRouter} from 'react-router'
+import {withRouter} from 'react-router';
 import {
 	PREFIX_ACCOUNT as PREFIX,
 	PREFIX_ALERT as ALERT,
@@ -31,6 +31,7 @@ const SingUp = (state) => {
 	const {
 		newCredentials,
 		credentials,
+		isLoad
 	} = state.store;
 
 	const {
@@ -39,7 +40,6 @@ const SingUp = (state) => {
 		isShowConfig,
 		isShowPassword,
 		config,
-		isLoad
 	} = newCredentials;
 
 	const loadIndicator = isLoad ? <CircularProgress size={24}/> : <span/>;
@@ -70,10 +70,7 @@ const SingUp = (state) => {
 			}
 
 			for (let prop of Object.values(configObj)) if (!prop) return state.showError('Credentials is invalid');
-			const user = await Firebase.authUser(configObj, email, password);
-
-			if (!user) throw new Error('User not found');
-			if (user.isAnonymous) throw new Error('Bad user authorization in firebase');
+			await Firebase.authUser(configObj, email, password);
 
 			state.addCredential(email, password, configObj);
 
@@ -216,6 +213,5 @@ export default connect(
 		configLoadRun: () => dispatch({type: `${PREFIX}ConfigLoadRun`}),
 		configLoadStop: () => dispatch({type: `${PREFIX}ConfigLoadStop`}),
 		showError: (message) => dispatch({type: `${ALERT}OpenError`, message}),
-		showOk: (message) => dispatch({type: `${ALERT}OpenOk`, message})
 	})
 )(withRouter(withStyles(styles)(SingUp)))

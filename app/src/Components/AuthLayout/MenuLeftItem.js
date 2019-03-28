@@ -1,5 +1,5 @@
 import React from 'react';
-import {withRouter} from 'react-router'
+import {withRouter} from 'react-router';
 import ListItemIcon from "@material-ui/core/ListItemIcon/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText/ListItemText";
 import ListItem from "@material-ui/core/ListItem/ListItem";

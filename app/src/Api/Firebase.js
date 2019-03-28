@@ -23,7 +23,11 @@ class Firebase {
 				if (error) return bad(`Error code: ${error.code}, message: ${error.message}`)
 			});
 
-			app.auth().onAuthStateChanged(ok)
+			app.auth().onAuthStateChanged(user => {
+				if (!user) return bad('User not found');
+				if (user.isAnonymous) return bad('Bad user authorization in firebase');
+				ok(user);
+			})
 		})
 	}
 
@@ -52,8 +56,6 @@ export default Firebase
 // 	<script>
 // 		console.log('Run script');
 //
-// 		firebase.initializeApp(config);
-//
 // 		const setToCollection = async (collection, data) => {
 // 			return await firebase.database().ref(collection).set(data);
 // 		}
@@ -64,17 +66,7 @@ export default Firebase
 //
 // 			return await query.push(data);
 // 		}
-//
-// 		const getAllFrom = async (collection) => {
-// 			console.log(`Get collection: ${collection}`);
-//
-// 			const query = firebase.database().ref(collection);
-//
-// 			const snap = await query.once('value');
-//
-// 			return snap.val();
-// 		};
-//
+////
 // 		firebase.auth().onAuthStateChanged(async (userAuth) => {
 //
 // 			try {
@@ -83,13 +75,7 @@ export default Firebase
 //
 // 				// User is signed in.
 // 				// TODO: clear
-// 				console.log(`isAnonymous: ${userAuth.isAnonymous}, user uid ${userAuth.uid}`);
 //
-// 				const collection = 'users';
-//
-// 				let users = await getAllFrom(collection);
-//
-// 				console.log('Users is ', users);
 //
 // 				let newUser = await addNew(collection, {name : 'igor3'})
 // 				console.log('New user is ', newUser);
@@ -109,4 +95,4 @@ export default Firebase
 // 				console.error(e);
 // 			}
 // 		});
-// 	</script><
+// 	</script>

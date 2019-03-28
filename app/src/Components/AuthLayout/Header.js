@@ -1,4 +1,5 @@
 import React from 'react';
+import {withRouter} from 'react-router'
 import connect from "react-redux/es/connect/connect";
 import classNames from 'classnames';
 import Toolbar from "@material-ui/core/Toolbar/Toolbar";
@@ -9,14 +10,14 @@ import Typography from "@material-ui/core/Typography/Typography";
 import AppBar from "@material-ui/core/AppBar/AppBar";
 
 import {PREFIX_MENU_LEFT as PREFIX} from "../../const/prefix";
+import {PathAuth} from "../../const/path";
 import {withStyles} from "@material-ui/core";
 import LogoutIcon from "@material-ui/icons/ExitToApp"
 
 const Header = (state) => {
 
-	const { classes } = state;
+	const {classes} = state;
 
-	// eslint-disable-next-line
 	return (
 		<AppBar
 			position="absolute"
@@ -29,7 +30,7 @@ const Header = (state) => {
 					onClick={state.open}
 					className={classNames(classes.menuButton, state.store.open && classes.hide)}
 				>
-					<MenuIcon />
+					<MenuIcon/>
 				</IconButton>
 				<Typography
 					component="h1"
@@ -40,14 +41,14 @@ const Header = (state) => {
 				>
 					{state.title}
 				</Typography>
-				<Button color="inherit" >
-						<LogoutIcon /> Logout
+				<Button color="inherit" onClick={()=> state.history.push(PathAuth)}>
+					<LogoutIcon/> Logout
 				</Button>
 			</Toolbar>
-
 		</AppBar>
 	);
 };
+
 const drawerWidth = 240;
 const styles = theme => ({
 	root: {
@@ -128,9 +129,9 @@ const styles = theme => ({
 
 export default connect(
 	state => ({
-		store : state.MenuLeft,
+		store: state.MenuLeft,
 	}),
 	dispatch => ({
-		open  : () => dispatch({type :`${PREFIX}Open`})
+		open: () => dispatch({type: `${PREFIX}Open`})
 	})
-)(withStyles(styles, { withTheme: true })(Header))
+)(withRouter(withStyles(styles, {withTheme: true})(Header)))

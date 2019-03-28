@@ -3,26 +3,40 @@ import {PREFIX_ACCOUNT as PREFIX} from '../const/prefix'
 const initialCredentials = {
 	isShowConfig: false,
 	isShowPassword: false,
-	isLoad: false,
 	email: '',
 	password: '',
 	config: ''
 };
-
+// TODO: Back
 const initialState = {
-	isAuth: false,
+	isAuth: true,
+	isLoad: false,
 	accountActiveTab: 0,
 	credentials: [],
+	emailSelected : "",
 	newCredentials: {...initialCredentials}
 };
 
 const Account = (state = initialState, action) => {
 	// eslint-disable-next-line
 	switch (action.type) {
+		case `${PREFIX}IsAuth`:
+			return {
+				...state,
+				isAuth: true,
+			};
+		case `${PREFIX}SelectEmail`:
+			return {
+				...state,
+				emailSelected: action.data,
+			};
 		case `${PREFIX}Init`:
 			return {
 				...state,
+				accountActiveTab: 0,
+				newCredentials: {...initialCredentials},
 				isAuth: false,
+				isLoad: false,
 			};
 		case `${PREFIX}SetCredential`:
 			return {
@@ -39,10 +53,7 @@ const Account = (state = initialState, action) => {
 		case `${PREFIX}ConfigLoadRun`:
 			return {
 				...state,
-				newCredentials: {
-					...state.newCredentials,
-					isLoad: true
-				}
+				isLoad: true,
 			};
 		case `${PREFIX}ToggleShowPassword`:
 			return {

@@ -1,4 +1,6 @@
 import React, {Component}  from 'react';
+import {connect} from 'react-redux';
+import {withRouter} from 'react-router';
 // MD
 import { withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -6,10 +8,13 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 // My cmp
 import Header from './Header'
 import MenuLeft from './MenuLeft'
+// Const
+import {PathAuth} from '../../const/path'
 
 class Layout extends Component {
 	componentDidMount() {
-
+		if (!this.props.store.isAuth)
+			this.props.history.push(PathAuth)
 	}
 
 	render() {
@@ -108,6 +113,11 @@ const styles = theme => ({
 	},
 });
 
-export default withStyles(styles)(Layout);
+export default connect(
+	state => ({
+		store: state.Account
+	}),
+	dispatch => ({})
+)(withRouter(withStyles(styles)(Layout)));
 
 

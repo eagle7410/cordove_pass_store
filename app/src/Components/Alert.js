@@ -25,93 +25,92 @@ import {withStyles} from '@material-ui/core'
 import {classes} from '../const/styles'
 
 const iconStyle = {
-  marginRight: 2
-}
+	marginRight: 2
+};
 
 const Alert = (state) => {
-  const {classes} = state
-  const scroll = 'paper'
+	const {classes} = state;
+	const scroll = 'paper';
 
-  let icon = ''
-  let styleButton = {
-    backgroundColor: BG_COLOR_DEFAULT,
-    color: COLOR_BLACK
-  }
+	let icon = '';
+	let styleButton = {
+		backgroundColor: BG_COLOR_DEFAULT,
+		color: COLOR_BLACK
+	};
 
-  if (state.store.isShowIcon) {
+	if (state.store.isShowIcon) {
 		// eslint-disable-next-line
 		switch (state.store.showIcon) {
-  case ICON_TYPES.OK:
-    icon = <IconOk style={iconStyle} />
-    break
-  case ICON_TYPES.BAD:
-    icon = <IconErr style={iconStyle} />
-    break
-  case ICON_TYPES.WARN:
-    icon = <IconWarn style={iconStyle} />
-    break
-}
-  }
+			case ICON_TYPES.OK:
+				icon = <IconOk style={iconStyle}/>;
+				break;
+			case ICON_TYPES.BAD:
+				icon = <IconErr style={iconStyle}/>;
+				break;
+			case ICON_TYPES.WARN:
+				icon = <IconWarn style={iconStyle}/>;
+				break;
+		}
+	}
 
 	// eslint-disable-next-line
 	switch (state.store.type) {
-  case TYPES.OK:
-    styleButton = {
-      backgroundColor: BG_COLOR_SUCCESS,
-      color: COLOR_WHITE
-    }
-    break
-  case TYPES.BAD:
-    styleButton = {
-      backgroundColor: BG_COLOR_ERROR,
-      color: COLOR_WHITE
-    }
-    break
+		case TYPES.OK:
+			styleButton = {
+				backgroundColor: BG_COLOR_SUCCESS,
+				color: COLOR_WHITE
+			};
+			break;
+		case TYPES.BAD:
+			styleButton = {
+				backgroundColor: BG_COLOR_ERROR,
+				color: COLOR_WHITE
+			};
+			break;
+		case TYPES.WARN:
+			styleButton = {
+				backgroundColor: BG_COLOR_WARNING,
+				color: COLOR_BLACK
+			};
+			break;
+	}
 
-  case TYPES.WARN:
-    styleButton = {
-      backgroundColor: BG_COLOR_WARNING,
-      color: COLOR_BLACK
-    }
-    break
-}
-
-  return (
-    <div>
-      <Dialog
-        open={state.store.isOpen}
-        onClose={state.close}
-        scroll={scroll}
-        aria-labelledby='scroll-dialog-title'
+	return (
+		<div>
+			<Dialog
+				open={state.store.isOpen}
+				onClose={state.close}
+				scroll={scroll}
+				aria-labelledby='scroll-dialog-title'
 			>
-        <DialogTitle id='scroll-dialog-title'>System message</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            {state.store.message}
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <div>
-            <Button
-              className={classes.button}
-              style={styleButton}
-              onClick={state.close}
+				<DialogTitle id='scroll-dialog-title'>System message</DialogTitle>
+				<DialogContent>
+					<DialogContentText>
+						{state.store.message}
+					</DialogContentText>
+				</DialogContent>
+				<DialogActions>
+					<div>
+						<Button
+							className={classes.button}
+							style={styleButton}
+							onClick={state.close}
 						>
-              {icon}
-              {state.store.labelOk}
-            </Button>
-          </div>
-        </DialogActions>
-      </Dialog>
-    </div>
-  )
-}
+							{icon}
+							{state.store.labelOk}
+						</Button>
+					</div>
+				</DialogActions>
+			</Dialog>
+		</div>
+	)
+};
 
 export default connect(
 	state => ({
-  store: state.Alert
-}),
+		store: state.Alert
+	}),
 	dispatch => ({
-  close: () => dispatch({type: `${PREFIX}Close`})
-})
+		close: () => dispatch({type: `${PREFIX}Close`})
+	})
 )(withStyles(classes, {withTheme: true})(Alert))
