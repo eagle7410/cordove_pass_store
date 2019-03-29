@@ -1,21 +1,18 @@
-
 import React from 'react';
 import {connect} from 'react-redux';
-
 // My cmp
 import {withStyles} from "@material-ui/core";
-import Button from "@material-ui/core/Button";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
 import TablePagination from "@material-ui/core/TablePagination";
-import DeleteIcon from '@material-ui/icons/Delete';
-import EditIcon from '@material-ui/icons/Edit';
-import CopyIcon from '@material-ui/icons/FileCopy';
+import RowAction from "./TableRowAction";
 
 import {classes} from "../../const/styles";
 import Tools from './TableTools'
+import Head from './TableHead'
+import Filters from './TableFilters'
 import {PREFIX_STORE as PREFIX} from "../../const/prefix";
 
 const TableFrame = (state) => {
@@ -25,78 +22,75 @@ const TableFrame = (state) => {
 		page,
 		rowsPerPage,
 		selected,
+		isShowFilters,
 		order,
 		orderBy
 	} = state.store;
-	const {items:data} = state.data;
 
-	let rows = [].concat(items);
+	const {
+		category,
+		titleLogin,
+		answer,
+		description,
+	} = state.filters;
 
-	const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+	const {items: categories} = state.data;
+
+	let rows = [].concat(items).filter(row => !(
+		(category > 0 && row.category !== category) ||
+		!(row.title + row.login).toLowerCase().includes(titleLogin.toLowerCase()) ||
+		!row.answer.includes(answer) ||
+		!row.desc.includes(description)
+	));
 
 	const handleChangeRowsPerPage = (event) => state.rowsOnPage(event.target.value);
 	const handleChangePage = (event, page) => state.page(page);
-	const handleDataDelete = ($ev, category) => {
-		$ev.preventDefault();
-		console.log('delete category', category);
-	};
+
+	const filters = isShowFilters ? <Filters/> : null;
 
 	return (
 		<div>
-			<Tools  />
+			<Tools/>
 			<div className={classes.tableWrapper}>
 				<Table className={classes.table} aria-labelledby="tableTitle">
+					<Head/>
 					<TableBody>
+						{filters}
 						{stableSort(rows, getSorting(order, orderBy))
 							.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-							.map(n => {
-								const isSelect = selected.includes(n.id);
+							.map(row => {
+								const isSelect = selected.includes(row.id);
 
 								return (
 									<TableRow
 										hover
-										role="checkbox"
 										aria-checked={isSelect}
 										tabIndex={-1}
-										key={`cat${n.id}`}
+										key={`cat${row.id}`}
 										selected={isSelect}
 									>
 										<TableCell component="td" scope="row">
-											<Button onClick={($ev) => handleDataDelete($ev, n)}
-											>
-												<DeleteIcon key={`icoDel${n.id}`}/>
-											</Button>
-											<Button onClick={($ev) => handleDataDelete($ev, n)}
-											>
-												<EditIcon key={`icoEdit${n.id}`}/>
-											</Button>
-											<Button onClick={($ev) => handleDataDelete($ev, n)}
-											>
-												<CopyIcon key={`icoCopy${n.id}`}/>
-											</Button>
+											<RowAction row={row} />
 										</TableCell>
 										<TableCell component="td" scope="row">
-											{n.title}<br/>
-											{n.login}
+											{row.title}<br/>
+											{row.login}
 										</TableCell>
 										<TableCell component="td" scope="row">
-											{n.pass}
+											{row.isShowPassword ? row.pass : '*'.repeat(row.pass.length)}
 										</TableCell>
 										<TableCell component="td" scope="row">
-											{n.category}
+											{categories[row.category] || 'Category not found'}
 										</TableCell>
 										<TableCell component="td" scope="row">
-											{n.answer}
+											{row.answer}
 										</TableCell>
 										<TableCell component="td" scope="row">
-											{n.desc}
+											{row.desc.split('\n').map((element, inx) => (<div key={`elem${row.id + inx}`}>{element}</div>))}
 										</TableCell>
 									</TableRow>
 								);
 							})}
-						{emptyRows > 0 && (
-							<TableRow style={{ height: 49 * emptyRows }} key={'catEmpty'} />
-						)}
 					</TableBody>
 				</Table>
 			</div>
@@ -121,6 +115,7 @@ const TableFrame = (state) => {
 export default connect(
 	state => ({
 		store: state.Store,
+		filters: state.StoreFilters,
 		data: state.Categories
 	}),
 	dispatch => ({

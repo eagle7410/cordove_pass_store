@@ -4,11 +4,11 @@ import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import Table from "../Components/DataList/TableFrame";
 
-const DataList = (state) => {
+const DataList = () => {
 	return (
 		<Layout title="Data List">
 			<Grid container>
-				<Grid item>
+				<Grid item md={12}>
 					<Paper>
 						<Table/>
 					</Paper>

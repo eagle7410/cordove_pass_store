@@ -5,5 +5,5 @@ import Categories from './Categories'
 export {
 	Auth,
 	DataList,
-	Categories
+	Categories,
 }

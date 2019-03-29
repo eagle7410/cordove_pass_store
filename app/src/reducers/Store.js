@@ -3,6 +3,7 @@ import {
 } from '../const/prefix'
 
 const initialState = {
+	isShowFilters: false,
 	page: 0,
 	selected : [],
 	rowsPerPage : 10,
@@ -16,6 +17,7 @@ const initialState = {
 		id: 2,
 		login: 'login2',
 		pass: 'pass2',
+		isShowPassword : false,
 		title: 'Joxi'
 	},
 	{
@@ -25,6 +27,7 @@ const initialState = {
 		id: 3,
 		login: 'login3',
 		pass: 'pass3',
+		isShowPassword : false,
 		title: 'RadioRokcs'
 	},
 	{
@@ -34,6 +37,7 @@ const initialState = {
 		id: 4,
 		login: 'login4',
 		pass: 'pass4',
+		isShowPassword : false,
 		title: 'WiFi '
 	}
 	]
@@ -42,6 +46,20 @@ const initialState = {
 const Store = (state = initialState, action) => {
 	// eslint-disable-next-line
 	switch (action.type) {
+		case `${PREFIX}ToggleShowFilters`:
+			return {
+				...state,
+				isShowFilters : !state.isShowFilters
+			};
+		case `${PREFIX}ToggleShowPass`:
+			return {
+				...state,
+				items : state.items.map(d => {
+					if (d.id === action.data) d.isShowPassword = !d.isShowPassword;
+
+					return d;
+				})
+			};
 		case `${PREFIX}SetPage`:
 			return {
 				...state,
@@ -55,7 +73,7 @@ const Store = (state = initialState, action) => {
 		case `${PREFIX}Set`:
 			return {
 				...state,
-				items: action.data
+				items: action.data.map(d =>({...d, isShowPassword : false}))
 			};
 	}
 

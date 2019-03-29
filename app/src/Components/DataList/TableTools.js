@@ -1,4 +1,5 @@
 import React from "react";
+import {connect} from "react-redux";
 
 // MD
 import Fab from '@material-ui/core/Fab';
@@ -9,10 +10,14 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Tooltip from "@material-ui/core/Tooltip";
 import {lighten} from "@material-ui/core/styles/colorManipulator";
+import {PREFIX_STORE as PREFIX} from "../../const/prefix";
 
 const TableTools = state => {
 
 	const { classes } = state;
+	const {
+		isShowFilters
+	} = state.store;
 
 	return (
 		<Toolbar className={classes.root} >
@@ -29,7 +34,9 @@ const TableTools = state => {
 					[
 						(
 							<Tooltip title="Filters list" key={'dataToolFilter'} >
-								<Fab color="primary" aria-label="Filters" className={classes.fab} >
+								<Fab color="primary" aria-label="Filters" className={isShowFilters ? classes.fabRotate : classes.fab}
+									onClick={state.toggleShowFilters}
+								>
 									<FilterIcon variant="contained"/>
 								</Fab>
 							</Tooltip>
@@ -53,7 +60,17 @@ const style = theme => ({
 		paddingRight: theme.spacing.unit,
 	},
 	fab : {
-		marginLeft: 4
+		marginLeft: 4,
+		transitionDuration: '0.2s',
+		transitionProperty: 'transform',
+		transform: 'rotate(360deg)',
+		webkitTransform: 'rotate(360deg)'
+	},
+	fabRotate : {
+		transitionDuration: '0.2s',
+		transitionProperty: 'transform',
+		transform: 'rotate(180deg)',
+		webkitTransform: 'rotate(180deg)'
 	},
 	highlight:
 		theme.palette.type === 'light'
@@ -75,6 +92,14 @@ const style = theme => ({
 	title: {
 		flex: '0 0 auto',
 	},
-})
+});
 
-export default withStyles(style)(TableTools);
+export default connect(
+	state => ({
+		store: state.Store
+	}),
+	dispatch => ({
+		toggleShowFilters : () => dispatch({type : `${PREFIX}ToggleShowFilters`}),
+	})
+)(withStyles(style)(TableTools));
+

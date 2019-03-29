@@ -1,4 +1,5 @@
 import React from "react";
+import {connect} from "react-redux";
 
 // MD
 import Fab from '@material-ui/core/Fab';
@@ -8,6 +9,9 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Tooltip from "@material-ui/core/Tooltip";
 import {lighten} from "@material-ui/core/styles/colorManipulator";
+import {
+	PREFIX_CATEGORY_ADD as PREFIX_ADD
+} from "../../const/prefix";
 
 const TableTools = state => {
 
@@ -26,7 +30,9 @@ const TableTools = state => {
 			<div className={classes.actions}>
 				{(
 					<Tooltip title="Add to list">
-						<Fab color="primary" aria-label="Add" className={classes.fab}>
+						<Fab color="primary" aria-label="Add" className={classes.fab}
+						     onClick={state.add}
+						>
 							<AddIcon />
 						</Fab>
 					</Tooltip>
@@ -59,6 +65,13 @@ const style = theme => ({
 	title: {
 		flex: '0 0 auto',
 	},
-})
+});
 
-export default withStyles(style)(TableTools);
+export default connect(
+	state => ({
+		store: state.CategoryAdd
+	}),
+	dispatch => ({
+		add: () => dispatch({type: `${PREFIX_ADD}Open`}),
+	})
+)(withStyles(style)(TableTools))

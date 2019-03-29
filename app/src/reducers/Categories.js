@@ -9,7 +9,6 @@ import {
 
 const initialState = {
 	items: {
-		'2': 'All Categories',
 		'3': 'Unknown',
 		'4': 'Home',
 		'5': 'jobGlobal',

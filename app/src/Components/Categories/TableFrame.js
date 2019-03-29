@@ -14,7 +14,9 @@ import DeleteIcon from '@material-ui/icons/Delete';
 
 import {classes} from "../../const/styles";
 import Tools from './TableTools'
-import {PREFIX_CATEGORIES as PREFIX} from "../../const/prefix";
+import {
+	PREFIX_CATEGORIES as PREFIX,
+} from "../../const/prefix";
 
 const TableFrame = (state) => {
 	const {classes} = state;
@@ -109,7 +111,7 @@ export default connect(
 	}),
 	dispatch => ({
 		page: data => dispatch({type: `${PREFIX}SetPage`, data}),
-		rowsOnPage: data => dispatch({type: `${PREFIX}SetRowsOnPage`, data})
+		rowsOnPage: data => dispatch({type: `${PREFIX}SetRowsOnPage`, data}),
 	})
 )(withStyles(classes)(TableFrame));
 
