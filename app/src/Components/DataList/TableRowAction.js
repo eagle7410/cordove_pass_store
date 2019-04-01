@@ -11,8 +11,12 @@ import HideIcon from '@material-ui/icons/VisibilityOff';
 // My
 import {
 	PREFIX_ALERT as ALERT,
-	PREFIX_STORE as PREFIX
+	PREFIX_STORE as PREFIX,
+	PREFIX_STORE_ADD as STORE_ADD
 } from '../../const/prefix'
+import {
+	Firebase
+} from '../../Api'
 
 const TableRowAction = (state) => {
 	const row = state.row;
@@ -33,9 +37,21 @@ const TableRowAction = (state) => {
 
 	const handleToggleShowPassword = () => state.toggleShowPassword(row.id);
 
-	const handleDataDelete = ($ev) => {
+	const handleDataEdit = ($ev) => {
 		$ev.preventDefault();
-		console.log('delete category', row);
+		state.openEdit(row);
+	};
+
+	const handleDataDelete = async ($ev) => {
+		$ev.preventDefault();
+		if (!window.confirm()) return false;
+
+		try {
+			await Firebase.removeByKey('store', row.dbId);
+			state.remove(row);
+		} catch (e) {
+			state.showError(e.message || e);
+		}
 	};
 
 	return (
@@ -47,7 +63,7 @@ const TableRowAction = (state) => {
 			</Tooltip>
 
 			<Tooltip title="Edit">
-				<Button onClick={($ev) => handleDataDelete($ev)}
+				<Button onClick={($ev) => handleDataEdit($ev)}
 				>
 					<EditIcon key={`icoEdit${row.id}`}/>
 				</Button>
@@ -74,6 +90,8 @@ export default connect(
 		store: state.Store
 	}),
 	dispatch => ({
+		openEdit: (data) => dispatch({type:`${STORE_ADD}Edit`, data}),
+		remove: (data) => dispatch({type:`${PREFIX}Remove`, data}),
 		toggleShowPassword: (data) => dispatch({type:`${PREFIX}ToggleShowPass`, data}),
 		showError: (message) => dispatch({type: `${ALERT}OpenError`, message}),
 	})

@@ -38,6 +38,12 @@ const StoreAdd = (state = initialState, action) => {
 				...state,
 				[action.data.field] : action.data.value
 			};
+		case `${PREFIX}Edit`:
+			return {
+				...initialState,
+				...action.data,
+				isOpen : true
+			};
 		case `${PREFIX}Open`:
 			return {
 				...initialState,

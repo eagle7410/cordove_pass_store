@@ -39,6 +39,12 @@ class Firebase {
 		return snap.val();
 	}
 
+	static async removeByKey(name, key) {
+		const query = firebase.database().ref(name);
+
+		return await query.child(key).remove();
+	}
+
 	static async setNew(name, key, data) {
 		const query = firebase.database().ref(name);
 

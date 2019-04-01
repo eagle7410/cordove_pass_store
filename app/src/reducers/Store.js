@@ -46,6 +46,11 @@ const initialState = {
 const Store = (state = initialState, action) => {
 	// eslint-disable-next-line
 	switch (action.type) {
+		case `${PREFIX}Remove`:
+			return {
+				...state,
+				items : state.items.filter(row => row.dbId !== action.data.dbId)
+			};
 		case `${PREFIX}AddRecord`:
 			return {
 				...state,
