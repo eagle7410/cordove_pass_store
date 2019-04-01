@@ -1,26 +1,10 @@
 import {
 	PREFIX_CATEGORIES as PREFIX
 } from '../const/prefix'
-// TODO: Back
-// const initialState = {
-// 	items: {},
-// 	idMax : 0,
-// };
 
 const initialState = {
-	items: {
-		'3': 'Unknown',
-		'4': 'Home',
-		'5': 'jobGlobal',
-		'6': 'FreeLanche',
-		'7': 'Internet',
-		'8': 'Relax',
-		'9': 'SocialNet',
-		'10': 'Email',
-		'11': 'AgriLab',
-		'12': 'Resume'
-	},
-	idMax: 12,
+	items: {},
+	idMax : 0,
 	page: 0,
 	selected : [],
 	rowsPerPage : 10,

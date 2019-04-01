@@ -4,16 +4,27 @@ import {
 
 const initialState = {
 	isOpen : false,
+	isLoad : false,
 	name   : ''
 };
 
 const CategoryAdd = (state = initialState, action) => {
 	// eslint-disable-next-line
 	switch (action.type) {
+		case `${PREFIX}LoadRun`:
+			return {
+				...state,
+				isLoad : true
+			};
+		case `${PREFIX}LoadStop`:
+			return {
+				...state,
+				isLoad : false
+			};
 		case `${PREFIX}ChaneName`:
 			return {
 				...state,
-				name : action.data
+				name : action.data.trim()
 			};
 		case `${PREFIX}Open`:
 			return {

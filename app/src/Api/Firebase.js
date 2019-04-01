@@ -39,6 +39,16 @@ class Firebase {
 		return snap.val();
 	}
 
+	static async addNew(name, data) {
+		const query = firebase.database().ref(name);
+
+		return await query.push(data);
+	}
+
+	static async setCollection(name, data) {
+		return await firebase.database().ref(name).set(data);
+	}
+
 	static async getData() {
 		const store = await this.getCollection('store');
 		const categories = await this.getCollection('categories');
@@ -51,48 +61,3 @@ class Firebase {
 }
 
 export default Firebase
-
-//
-// 	<script>
-// 		console.log('Run script');
-//
-// 		const setToCollection = async (collection, data) => {
-// 			return await firebase.database().ref(collection).set(data);
-// 		}
-//
-// 		const addNew = async (collection, data) => {
-// 			console.log(`Get collection: ${collection}`);
-// 			const query = firebase.database().ref(collection);
-//
-// 			return await query.push(data);
-// 		}
-////
-// 		firebase.auth().onAuthStateChanged(async (userAuth) => {
-//
-// 			try {
-// 				if (!userAuth)
-// 					throw new Error('Not found user');
-//
-// 				// User is signed in.
-// 				// TODO: clear
-//
-//
-// 				let newUser = await addNew(collection, {name : 'igor3'})
-// 				console.log('New user is ', newUser);
-//
-// 				users = await getAllFrom(collection);
-//
-// 				console.log('Users is ', users);
-//
-// 				await setToCollection(collection, {
-// 					0: users[0],
-// 					1: users[1],
-// 				});
-//
-// 				users = await getAllFrom(collection);
-// 				console.log('Users is ', users);
-// 			} catch (e) {
-// 				console.error(e);
-// 			}
-// 		});
-// 	</script>

@@ -15,8 +15,10 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import {classes} from "../../const/styles";
 import Tools from './TableTools'
 import {
+	PREFIX_ALERT as ALERT,
 	PREFIX_CATEGORIES as PREFIX,
 } from "../../const/prefix";
+import {Firebase} from "../../Api";
 
 const TableFrame = (state) => {
 	const {classes} = state;
@@ -43,9 +45,30 @@ const TableFrame = (state) => {
 
 	const handleChangeRowsPerPage = (event) => state.rowsOnPage(event.target.value);
 	const handleChangePage = (event, page) => state.page(page);
-	const handleCategoryDelete = ($ev, category) => {
+	const handleCategoryDelete = async ($ev, category) => {
 		$ev.preventDefault();
-		console.log('delete category', category);
+
+		if (!window.confirm(`You real want delete category ${category.name}`))
+			return false;
+
+		try {
+			if (Number(counters[category.id] || 0) > 0)
+				throw new Error(`Category must be free`);
+
+			let updatedCategories = {};
+
+			Object.keys(items).map(key => {
+				if (Number(key) !== category.id) updatedCategories[key] = items[key];
+			});
+
+			await Firebase.setCollection('categories', updatedCategories);
+			updatedCategories = await Firebase.getCollection('categories');
+
+			state.setCategories(updatedCategories);
+
+		} catch (e) {
+			state.showError(e.message || e)
+		}
 	};
 
 	return (
@@ -110,8 +133,10 @@ export default connect(
 		data: state.Store
 	}),
 	dispatch => ({
-		page: data => dispatch({type: `${PREFIX}SetPage`, data}),
-		rowsOnPage: data => dispatch({type: `${PREFIX}SetRowsOnPage`, data}),
+		showError     : message => dispatch({type: `${ALERT}OpenError`, message}),
+		page          : data => dispatch({type: `${PREFIX}SetPage`, data}),
+		rowsOnPage    : data => dispatch({type: `${PREFIX}SetRowsOnPage`, data}),
+		setCategories : data => dispatch({type : `${PREFIX}Set`, data}),
 	})
 )(withStyles(classes)(TableFrame));
 
