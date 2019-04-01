@@ -95,6 +95,5 @@ export default connect(
 		toggleShowPassword: (data) => dispatch({type:`${PREFIX}ToggleShowPass`, data}),
 		showError: (message) => dispatch({type: `${ALERT}OpenError`, message}),
 	})
-)
-(TableRowAction);
+)(TableRowAction);
 

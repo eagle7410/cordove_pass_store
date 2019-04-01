@@ -9,43 +9,17 @@ const initialState = {
 	rowsPerPage : 10,
 	order : 'desc',
 	orderBy : 'id',
-	items : [
-	{
-		answer: 'answer2',
-		category: 5,
-		desc: '',
-		id: 2,
-		login: 'login2',
-		pass: 'pass2',
-		isShowPassword : false,
-		title: 'Joxi'
-	},
-	{
-		answer: '',
-		category: 8,
-		desc: 'eaglr.eagle@mail.ru',
-		id: 3,
-		login: 'login3',
-		pass: 'pass3',
-		isShowPassword : false,
-		title: 'RadioRokcs'
-	},
-	{
-		answer: '',
-		category: 7,
-		desc: '',
-		id: 4,
-		login: 'login4',
-		pass: 'pass4',
-		isShowPassword : false,
-		title: 'WiFi '
-	}
-	]
+	items : [],
 };
 
 const Store = (state = initialState, action) => {
 	// eslint-disable-next-line
 	switch (action.type) {
+		case `${PREFIX}EditRecord`:
+			return {
+				...state,
+				items : state.items.map(row => row.id === action.data.id ? {...row, ...action.data} : row)
+			};
 		case `${PREFIX}Remove`:
 			return {
 				...state,

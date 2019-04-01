@@ -35,6 +35,7 @@ const FormDialog = (state) => {
 
 	const {
 		id,
+		dbId,
 		isOpen,
 		isLoad,
 		title,
@@ -54,27 +55,46 @@ const FormDialog = (state) => {
 
 		try {
 
-			if (id !== null) {
-				// TODO: Back do edit
-			}
-
 			const titleLogin = title + login;
 
 			if (!titleLogin.length)
 				throw new Error(`Must have login or title`);
-
-			const titleLoginCat = title + login + category;
-
-			for (let {title, login, category} of rows) {
-				if (title + login + category === titleLoginCat)
-					throw new Error(`In category ${items[category]} has record with title, login: ${title}, ${login}`);
-			}
 
 			if (category === -1)
 				throw new Error('Category is required');
 
 			if (!pass.length)
 				throw new Error('Password is required');
+
+			const titleLoginCat = title + login + category;
+
+			if (id !== null) {
+				for (let {title, login, category, id:ID} of rows) {
+					if (title + login + category === titleLoginCat && ID !==id )
+						throw new Error(`In category ${items[category]} has record with title, login: ${title}, ${login}`);
+				}
+
+				const record = {
+					title     : title.trim(),
+					login     : login.trim(),
+					pass      : pass.trim(),
+					answer    : answer.trim(),
+					desc      : desc.trim(),
+					id,
+					category
+				};
+
+				await Firebase.setNew('store', dbId, record);
+
+				state.editInStore(record);
+
+				return state.close();
+			}
+
+			for (let {title, login, category} of rows) {
+				if (title + login + category === titleLoginCat)
+					throw new Error(`In category ${items[category]} has record with title, login: ${title}, ${login}`);
+			}
 
 			const record = {
 				id        : Date.now(),
@@ -100,10 +120,18 @@ const FormDialog = (state) => {
 		}
 	};
 
+	let Title = 'Add new record';
+	let ButtonLabel = 'Add';
+
+	if (id !== null) {
+		Title = 'Edit record';
+		ButtonLabel = 'Edit';
+	}
+
 	return (
 		<div>
 			<Dialog open={isOpen} onClose={state.close} aria-labelledby="form-dialog-title">
-				<DialogTitle id="form-dialog-title">Add new record</DialogTitle>
+				<DialogTitle id="form-dialog-title">{Title}</DialogTitle>
 				<DialogContent>
 					<TextField
 						autoFocus
@@ -184,7 +212,7 @@ const FormDialog = (state) => {
 						Cancel
 					</Button>
 					<Button onClick={handleAdd} disabled={isLoad} color="primary">
-						Add
+						{ButtonLabel}
 					</Button>
 				</DialogActions>
 			</Dialog>
@@ -207,6 +235,7 @@ export default connect(
 		data: state.Store
 	}),
 	dispatch => ({
+		editInStore        : (data) => dispatch({type : `${STORE}EditRecord`, data}),
 		addToStore         : (data) => dispatch({type : `${STORE}AddRecord`, data}),
 		toggleShowPassword : () => dispatch({type : `${PREFIX}ToggleShowPassword`}),
 		updateCategories   : data => dispatch({type : `${CATEGORIES}Set`, data}),

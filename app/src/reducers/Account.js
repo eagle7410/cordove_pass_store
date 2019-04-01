@@ -8,9 +8,8 @@ const initialCredentials = {
 	config: ''
 };
 
-// TODO: Back isAuth
 const initialState = {
-	isAuth: true,
+	isAuth: false,
 	isLoad: false,
 	accountActiveTab: 0,
 	credentials: [],
