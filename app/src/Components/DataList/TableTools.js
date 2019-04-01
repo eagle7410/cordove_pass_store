@@ -1,6 +1,5 @@
 import React from "react";
 import {connect} from "react-redux";
-
 // MD
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
@@ -10,17 +9,18 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Tooltip from "@material-ui/core/Tooltip";
 import {lighten} from "@material-ui/core/styles/colorManipulator";
-import {PREFIX_STORE as PREFIX} from "../../const/prefix";
+import {PREFIX_STORE as PREFIX, PREFIX_STORE_ADD as STORE_ADD} from "../../const/prefix";
 
 const TableTools = state => {
 
-	const { classes } = state;
+	const {classes} = state;
+
 	const {
 		isShowFilters
 	} = state.store;
 
 	return (
-		<Toolbar className={classes.root} >
+		<Toolbar className={classes.root}>
 			<div className={classes.title}>
 				{(
 					<Typography variant="h6" id="tableTitle">
@@ -28,22 +28,25 @@ const TableTools = state => {
 					</Typography>
 				)}
 			</div>
-			<div className={classes.spacer} />
+			<div className={classes.spacer}/>
 			<div className={classes.actions}>
 				{
 					[
 						(
-							<Tooltip title="Filters list" key={'dataToolFilter'} >
-								<Fab color="primary" aria-label="Filters" className={isShowFilters ? classes.fabRotate : classes.fab}
-									onClick={state.toggleShowFilters}
+							<Tooltip title="Filters list" key={'dataToolFilter'}>
+								<Fab color="primary" aria-label="Filters"
+								     className={isShowFilters ? classes.fabRotate : classes.fab}
+								     onClick={state.toggleShowFilters}
 								>
 									<FilterIcon variant="contained"/>
 								</Fab>
 							</Tooltip>
 						),
 						(
-							<Tooltip title="Add to list" key={'dataToolAdd'} >
-								<Fab color="primary" aria-label="Add" className={classes.fab} >
+							<Tooltip title="Add to list" key={'dataToolAdd'}>
+								<Fab color="primary" aria-label="Add" className={classes.fab}
+								     onClick={state.add}
+								>
 									<AddIcon variant="contained"/>
 								</Fab>
 							</Tooltip>
@@ -59,14 +62,14 @@ const style = theme => ({
 	root: {
 		paddingRight: theme.spacing.unit,
 	},
-	fab : {
+	fab: {
 		marginLeft: 4,
 		transitionDuration: '0.2s',
 		transitionProperty: 'transform',
 		transform: 'rotate(360deg)',
 		webkitTransform: 'rotate(360deg)'
 	},
-	fabRotate : {
+	fabRotate: {
 		transitionDuration: '0.2s',
 		transitionProperty: 'transform',
 		transform: 'rotate(180deg)',
@@ -99,7 +102,8 @@ export default connect(
 		store: state.Store
 	}),
 	dispatch => ({
-		toggleShowFilters : () => dispatch({type : `${PREFIX}ToggleShowFilters`}),
+		add: () => dispatch({type: `${STORE_ADD}Open`}),
+		toggleShowFilters: () => dispatch({type: `${PREFIX}ToggleShowFilters`}),
 	})
 )(withStyles(style)(TableTools));
 

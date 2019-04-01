@@ -1,7 +1,7 @@
 
 const PathDataList = '/data-list';
 const PathCategories = '/categories';
-const PathAfterAuth = PathCategories;
+const PathAfterAuth = PathDataList;
 const PathAuth = '/';
 
 export {

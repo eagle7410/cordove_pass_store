@@ -46,6 +46,11 @@ const initialState = {
 const Store = (state = initialState, action) => {
 	// eslint-disable-next-line
 	switch (action.type) {
+		case `${PREFIX}AddRecord`:
+			return {
+				...state,
+				items : state.items.concat([{...action.data}])
+			};
 		case `${PREFIX}ToggleShowFilters`:
 			return {
 				...state,
@@ -73,7 +78,7 @@ const Store = (state = initialState, action) => {
 		case `${PREFIX}Set`:
 			return {
 				...state,
-				items: action.data.map(d =>({...d, isShowPassword : false}))
+				items: Object.entries(action.data).map(([dbId, item]) => ({...item, isShowPassword : false, dbId})),
 			};
 	}
 

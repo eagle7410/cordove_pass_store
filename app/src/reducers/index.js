@@ -5,6 +5,7 @@ import {CategoryAdd} from './CategoryAdd'
 import {MenuLeft} from './MenuLeft'
 import {Account} from './Account'
 import {StoreFilters} from './StoreFilters'
+import {StoreAdd} from './StoreAdd'
 import {Store} from './Store'
 import {Alert} from './Alert'
 
@@ -14,6 +15,7 @@ const reducer = combineReducers({
 	CategoryAdd,
 	Categories,
 	MenuLeft,
+	StoreAdd,
 	Account,
 	Store,
 	Alert,

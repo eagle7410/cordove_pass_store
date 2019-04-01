@@ -33,10 +33,10 @@ const TableFrame = (state) => {
 	const {items:data} = state.data;
 	let counters = {};
 
+	// eslint-disable-next-line
 	data.map(d => {
 		if (!counters[d.category]) counters[d.category] = 0;
 		counters[d.category]++;
-
 	});
 
 	let rows = [].concat(Object.entries(items).map(([id, name]) => ({id:  Number(id), name})));
@@ -57,6 +57,7 @@ const TableFrame = (state) => {
 
 			let updatedCategories = {};
 
+			// eslint-disable-next-line
 			Object.keys(items).map(key => {
 				if (Number(key) !== category.id) updatedCategories[key] = items[key];
 			});

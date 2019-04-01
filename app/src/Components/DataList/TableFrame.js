@@ -13,7 +13,9 @@ import {classes} from "../../const/styles";
 import Tools from './TableTools'
 import Head from './TableHead'
 import Filters from './TableFilters'
-import {PREFIX_STORE as PREFIX} from "../../const/prefix";
+import {
+	PREFIX_STORE as PREFIX,
+} from "../../const/prefix";
 
 const TableFrame = (state) => {
 	const {classes} = state;
@@ -69,7 +71,7 @@ const TableFrame = (state) => {
 										key={`cat${row.id}`}
 										selected={isSelect}
 									>
-										<TableCell component="td" scope="row">
+										<TableCell component="td" scope="row" align={"right"} >
 											<RowAction row={row} />
 										</TableCell>
 										<TableCell component="td" scope="row">
@@ -86,7 +88,7 @@ const TableFrame = (state) => {
 											{row.answer}
 										</TableCell>
 										<TableCell component="td" scope="row">
-											{row.desc.split('\n').map((element, inx) => (<div key={`elem${row.id + inx}`}>{element}</div>))}
+											{row.desc.split('\n').map((element, inx) => (<div key={`elem${Number(row.id) + inx}`}>{element}</div>))}
 										</TableCell>
 									</TableRow>
 								);

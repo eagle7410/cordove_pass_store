@@ -2,15 +2,17 @@ const PREFIX_MENU_LEFT = 'MenuLeft';
 const PREFIX_ACCOUNT = 'Account';
 const PREFIX_ALERT = 'Alert';
 const PREFIX_STORE = 'Store';
+const PREFIX_STORE_ADD = 'StoreAdding';
 const PREFIX_STORE_FILTERS = 'StoreFilters';
 const PREFIX_CATEGORIES = 'Categories';
 const PREFIX_CATEGORY_ADD = 'CategoryAdd';
 
 module.exports = {
 	PREFIX_CATEGORY_ADD,
+	PREFIX_CATEGORIES,
+	PREFIX_STORE_ADD,
 	PREFIX_STORE_FILTERS,
 	PREFIX_STORE,
-	PREFIX_CATEGORIES,
 	PREFIX_MENU_LEFT,
 	PREFIX_ACCOUNT,
 	PREFIX_ALERT

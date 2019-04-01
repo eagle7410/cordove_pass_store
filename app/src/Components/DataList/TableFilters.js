@@ -6,7 +6,6 @@ import TextField from "@material-ui/core/TextField";
 import {
 	PREFIX_STORE_FILTERS as PREFIX
 } from '../../const/prefix'
-import Input from "@material-ui/core/Input";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 
